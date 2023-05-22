@@ -1,0 +1,10 @@
+allprojects{
+
+    group 'xyz.chener.ext.napt'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        maven { name "Alibaba" ; url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
+}

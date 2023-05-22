@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group = 'xyz.chener.ext.napt.server'
+version = '1.0-SNAPSHOT'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    implementation 'com.baomidou:mybatis-plus:3.5.3.1'
+    implementation 'com.baomidou:mybatis-plus-extension:3.5.3.1'
+    implementation 'org.springframework:spring-core:6.0.9'
+    implementation 'com.alibaba:druid:1.2.18'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'io.netty:netty-all:4.1.86.Final'
+    implementation 'org.slf4j:slf4j-api:2.0.2'
+    implementation 'ch.qos.logback:logback-classic:1.4.1'
+    implementation 'com.h2database:h2:2.1.214'
+
+    implementation 'com.google.protobuf:protobuf-java:3.23.1'
+
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.14.2')
+    implementation 'io.javalin:javalin:5.4.2'
+}
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes(
+                "Manifest-Version": 1.0,
+                'Main-Class': 'xyz.chener.ext.napt.server.Main'
+        )
+    }
+
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory()? it:zipTree(it) }
+    }
+}
