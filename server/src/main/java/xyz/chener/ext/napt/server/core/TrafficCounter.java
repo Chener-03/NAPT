@@ -21,11 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TrafficCounter {
 
 
-    public boolean add(String clientUid,String address,Long traffic){
+    public boolean add(String clientUid,String address,int port , Long traffic){
         ClientItemMapper clientItemMapper = StrongStarter.getMapper(ClientItemMapper.class);
-        ClientItem client = new LambdaQueryChainWrapper<ClientItem>(clientItemMapper)
+        ClientItem client = new LambdaQueryChainWrapper<>(clientItemMapper)
                 .eq(ClientItem::getClientUid, clientUid)
                 .eq(ClientItem::getClientAddr, address)
+                .eq(ClientItem::getServerPort,port)
                 .one();
         if (client == null){
             return false;
@@ -40,7 +41,7 @@ public class TrafficCounter {
         }
 
         try{
-            clientItemMapper.add(clientUid,address,traffic);
+            clientItemMapper.add(clientUid,address,port,traffic);
         }catch (Exception exception){
             log.error("TrafficCounter add error",exception);
             return true;
@@ -48,10 +49,10 @@ public class TrafficCounter {
         return true;
     }
 
-    public void sendFlow(ChannelHandlerContext ctx,String clientUid,String address){
+    public void sendFlow(ChannelHandlerContext ctx,String clientUid,int port,String address){
         ctx.channel().writeAndFlush(DataFrameEntity.DataFrame.newBuilder()
                 .setCode(DataFrameCode.CLIENT_FLOW_LIMIT)
-                .setMessage(String.format("客户端节点流量超限 : %s,%s",clientUid,address))
+                .setMessage(String.format("客户端节点流量超限 : %s,%s,%s",clientUid,address,port))
                 .build());
     }
 

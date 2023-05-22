@@ -38,10 +38,18 @@ public class RequestNt {
     private final Lock lock = new ReentrantLock();
 
     // 存放当前端口连接通道
-    private ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
 
     public String getClientAddr() {
         return clientAddr;
+    }
+
+    public String getClientUid() {
+        return clientUid;
+    }
+
+    public Integer getPort() {
+        return port;
     }
 
     public RequestNt(String clientUid, Integer port, String clientAddr) {
@@ -90,7 +98,7 @@ public class RequestNt {
                                 ChannelPipeline p = socketChannel.pipeline();
                                 p.addLast(new ByteArrayEncoder());
                                 p.addLast(new ByteArrayDecoder());
-                                p.addLast(new OnePortForwardHandle(clientUid,clientAddr,map));
+                                p.addLast(new OnePortForwardHandle(clientUid,clientAddr,map,port));
                             }
                         })
                         .childOption(ChannelOption.TCP_NODELAY, true)
@@ -131,10 +139,13 @@ public class RequestNt {
         private final String clientAddr;
         private final Map<String, ChannelHandlerContext> map;
 
-        private OnePortForwardHandle(String clientUid, String clientAddr, Map<String, ChannelHandlerContext> map) {
+        private final int port;
+
+        private OnePortForwardHandle(String clientUid, String clientAddr, Map<String, ChannelHandlerContext> map,int port) {
             this.clientUid = clientUid;
             this.clientAddr = clientAddr;
             this.map = map;
+            this.port = port;
         }
 
         private void doClose(ChannelHandlerContext ctx) {
@@ -158,8 +169,8 @@ public class RequestNt {
 
                 TrafficCounter trafficCounter = Continer.get(TrafficCounter.class);
                 if (trafficCounter != null){
-                    if (!trafficCounter.add(this.clientUid,clientAddr,Integer.valueOf(bts.length).longValue())) {
-                        trafficCounter.sendFlow(context,clientUid,clientAddr);
+                    if (!trafficCounter.add(this.clientUid,clientAddr,port,Integer.valueOf(bts.length).longValue())) {
+                        trafficCounter.sendFlow(context,clientUid,port,clientAddr);
                         return;
                     }
                 }

@@ -6,5 +6,6 @@ CREATE TABLE client_item (
      flow BIGINT,
      maxFlowLimit BIGINT,
      speedLimit BIGINT,
-     createTime DATETIME
+     createTime DATETIME,
+     remark VARCHAR(255)
 );

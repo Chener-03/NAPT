@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface ClientItemMapper extends BaseMapper<ClientItem> {
 
-    Map<String,String> getAllTables();
+    Map<String, Object> getAllTables();
 
-    int add(String clientUid,String address,Long traffic);
+    int add(String clientUid,String address,int port,Long traffic);
 
 }

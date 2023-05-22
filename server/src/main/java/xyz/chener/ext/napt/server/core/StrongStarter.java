@@ -126,7 +126,7 @@ public class StrongStarter {
 
     private void checkTable() throws IOException, SQLException {
         ClientItemMapper clientItemMapper = StrongStarter.getMapper(ClientItemMapper.class);
-        Map<String, String> allTables = clientItemMapper.getAllTables();
+        Map<String, Object> allTables = clientItemMapper.getAllTables();
         if (allTables == null){
             try(InputStream stream = this.getClass().getClassLoader().getResourceAsStream("sql/create_table_client_item.sql")) {
                 String sql = new String(stream.readAllBytes());

@@ -5,7 +5,7 @@
 <mapper namespace="xyz.chener.ext.napt.server.mapper.ClientItemMapper">
     <update id="add">
         update client_item set flow=flow+${traffic}
-        where client_uid=#{clientUid} and client_addr=#{address}
+        where client_uid=#{clientUid} and client_addr=#{address} and server_port = #{port}
     </update>
 
     <select id="getAllTables" resultType="java.util.Map">

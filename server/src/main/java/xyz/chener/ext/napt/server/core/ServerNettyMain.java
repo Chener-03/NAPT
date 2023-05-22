@@ -48,6 +48,7 @@ public class ServerNettyMain {
 
             try {
                 ChannelFuture future = bootstrap.bind(Integer.parseInt(Continer.get(ConfigLoader.class).get(ConfigLoader.KeyEnum.PORT))).sync();
+                log.info("启动服务器");
                 future.channel().closeFuture().sync();
             }catch (Exception exception){
                 Main.stop(String.format("转发线程终止，原因：%s", exception.getMessage()));

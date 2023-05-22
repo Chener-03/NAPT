@@ -1,14 +1,18 @@
 package xyz.chener.ext.napt.server;
 
 import com.google.protobuf.ByteString;
+import lombok.extern.slf4j.Slf4j;
 import xyz.chener.ext.napt.server.core.*;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
 
+import java.lang.management.ManagementFactory;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public class Main {
     public static void main(String[] args) {
+        log.info("server pid [{}]", ManagementFactory.getRuntimeMXBean().getPid());
 
         Continer.put(ConfigLoader.class,new ConfigLoader());
         Continer.put(StrongStarter.class,new StrongStarter()).start();
@@ -23,7 +27,7 @@ public class Main {
     private static final AtomicBoolean isclosing = new AtomicBoolean(false);
     public static void stop(String reason){
         if (isclosing.compareAndSet(false,true)){
-            System.out.println("server is closing, reason: "+reason);
+            log.info("server is closing, reason: "+reason);
             Continer.get(StrongStarter.class).stop();
             Continer.get(ServerNettyMain.class).stop();
         }

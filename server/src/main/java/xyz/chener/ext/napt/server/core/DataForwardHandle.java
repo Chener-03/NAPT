@@ -128,8 +128,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                     byte[] senddata = data.getData().toByteArray();
                     TrafficCounter trafficCounter = Continer.get(TrafficCounter.class);
                     if (trafficCounter != null){
-                        if (!trafficCounter.add(clientUID,clientAddr,Integer.valueOf(senddata.length).longValue())) {
-                            trafficCounter.sendFlow(ctx,clientUID,clientAddr);
+                        if (!trafficCounter.add(clientUID,clientAddr,e.getPort(),Integer.valueOf(senddata.length).longValue())) {
+                            trafficCounter.sendFlow(ctx,clientUID,e.getPort(),clientAddr);
                             return;
                         }
                     }
