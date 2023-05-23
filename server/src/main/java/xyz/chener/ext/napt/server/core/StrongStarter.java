@@ -18,17 +18,21 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.mapper.ClientItemMapper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
@@ -66,8 +70,6 @@ public class StrongStarter {
             Environment environment = new Environment("development", transactionFactory, dataSource);
             mbpConfig.setEnvironment(environment);
             sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(mbpConfig);
-            StrongStarter.getMapper(ClientItemMapper.class).selectList(new QueryWrapper<>());
-
             checkTable();
 
         }catch (Exception e)
@@ -156,7 +158,7 @@ public class StrongStarter {
     private static Object createMapperProxy(Class clazz){
         return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
             try(SqlSession session = Continer.get(StrongStarter.class).getSqlSessionFactory().openSession()) {
-                Object sourceObj = session.getMapper(method.getDeclaringClass());
+                Object sourceObj = session.getMapper(clazz);
                 return method.invoke(sourceObj,args);
             }
         });
