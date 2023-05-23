@@ -23,8 +23,8 @@ import java.util.Properties;
 @Slf4j
 public class ServerNettyMain {
 
-    public static final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    public static final NioEventLoopGroup workGroup = new NioEventLoopGroup(10);
+    private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    private final NioEventLoopGroup workGroup = new NioEventLoopGroup(5);
 
     public void start(){
         Thread t = new Thread(() -> {

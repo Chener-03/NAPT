@@ -98,7 +98,7 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                     ConnectCache.channelMap.put(ctx.channel().id().asLongText(),ctx);
 
                     List<RequestNt> ps = new CopyOnWriteArrayList<>();
-                    clients.forEach(ec-> ps.add(new RequestNt(ec.getClientUid(), ec.getServerPort(), ec.getClientAddr())));
+                    clients.forEach(ec-> ps.add(new RequestNt(ec.getClientUid(), ec.getServerPort(), ec.getClientAddr(),ec.getSpeedLimit().intValue())));
                     ConnectCache.portStarts.put(data.getMessage(),ps);
 
                 }catch (Exception exception){

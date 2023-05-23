@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/qs/6.11.1/qs.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tdesign-vue-next/dist/tdesign.min.css" />
+    <script src="https://unpkg.com/tdesign-vue-next/dist/tdesign.min.js"></script>
+</head>
+<body>
+<div style="text-align: center;width: 100%" id="app">
+    1
+
+</div>
+</body>
+<script>
+    const { createApp, reactive, toRefs ,ref,onMounted } = Vue
+    const data = reactive({})
+    const app = createApp({
+        setup(){
+            return {
+                ...data
+            }
+        }
+    })
+    app.use(TDesign)
+    app.mount("#app")
+</script>
+</html>

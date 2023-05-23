@@ -1,6 +1,8 @@
 package xyz.chener.ext.napt.server.core;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class ConfigLoader {
@@ -17,12 +19,15 @@ public class ConfigLoader {
 
     public ConfigLoader(){
         try {
-            properties.load(new FileInputStream("./proxy.properties"));
+            properties.load(new FileInputStream("./napt_server.properties"));
         }catch (Exception e){
             properties.put("port","4901");
             properties.put("webport","4900");
             properties.put("u","admin");
             properties.put("p","admin");
+            try {
+                properties.store(new FileOutputStream("./napt_server.properties"),"默认配置");
+            } catch (IOException ignored) { }
         }
     }
 

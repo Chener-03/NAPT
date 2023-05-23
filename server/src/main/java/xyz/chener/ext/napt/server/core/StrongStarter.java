@@ -3,6 +3,8 @@ package xyz.chener.ext.napt.server.core;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.baomidou.mybatisplus.core.MybatisSqlSessionFactoryBuilder;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.DefaultIdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.DefaultSqlInjector;
@@ -63,7 +65,8 @@ public class StrongStarter {
             TransactionFactory transactionFactory = new JdbcTransactionFactory();
             Environment environment = new Environment("development", transactionFactory, dataSource);
             mbpConfig.setEnvironment(environment);
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(mbpConfig);
+            sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(mbpConfig);
+            StrongStarter.getMapper(ClientItemMapper.class).selectList(new QueryWrapper<>());
 
             checkTable();
 

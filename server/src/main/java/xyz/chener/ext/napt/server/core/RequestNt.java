@@ -3,10 +3,13 @@ package xyz.chener.ext.napt.server.core;
 import com.google.protobuf.ByteString;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
+import io.netty.handler.traffic.ChannelTrafficShapingHandler;
+import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
@@ -25,6 +28,9 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class RequestNt {
 
+    private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    private final NioEventLoopGroup workGroup = new NioEventLoopGroup(5);
+
     private final String clientUid;
     private final Integer port;
     private final String clientAddr;
@@ -40,6 +46,11 @@ public class RequestNt {
     // 存放当前端口连接通道
     private final ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
 
+    // 进出流量限制
+    private final int speedLimit;
+
+    private GlobalTrafficShapingHandler speedLimitHandler = null;
+
     public String getClientAddr() {
         return clientAddr;
     }
@@ -52,7 +63,16 @@ public class RequestNt {
         return port;
     }
 
-    public RequestNt(String clientUid, Integer port, String clientAddr) {
+    public GlobalTrafficShapingHandler getSpeedLimitHandler() {
+        return speedLimitHandler;
+    }
+
+    public RequestNt(String clientUid, Integer port, String clientAddr, int speedLimit) {
+        if (speedLimit == -1){
+            this.speedLimit = Integer.MAX_VALUE;
+        }else {
+            this.speedLimit = speedLimit;
+        }
         this.clientUid = clientUid;
         this.port = port;
         this.clientAddr = clientAddr;
@@ -69,10 +89,11 @@ public class RequestNt {
             if (Objects.nonNull(channel))
                 channel.close();
             thread.interrupt();
-            try {
-                thread.join(2000);
-            } catch (InterruptedException ignored) {}
-        }finally {
+            bossGroup.shutdownGracefully();
+            workGroup.shutdownGracefully();
+            thread.join(2000);
+        }catch (Exception ignored){}
+        finally {
             lock.unlock();
         }
     }
@@ -86,16 +107,19 @@ public class RequestNt {
 
     private void run()
     {
-        while (isStart)
+        while (isStart && !Thread.currentThread().isInterrupted())
         {
             try {
                 ServerBootstrap bootstrap = new ServerBootstrap()
-                        .group(ServerNettyMain.bossGroup, ServerNettyMain.workGroup)
+                        .group(bossGroup,workGroup)
                         .channel(NioServerSocketChannel.class)
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                                speedLimitHandler = new GlobalTrafficShapingHandler(workGroup,speedLimit, speedLimit);
+
                                 ChannelPipeline p = socketChannel.pipeline();
+                                p.addLast(speedLimitHandler);
                                 p.addLast(new ByteArrayEncoder());
                                 p.addLast(new ByteArrayDecoder());
                                 p.addLast(new OnePortForwardHandle(clientUid,clientAddr,map,port));

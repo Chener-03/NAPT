@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+
+
+package xyz.chener.ext.napt.client.entity;
+
+
+option java_package = "xyz.chener.ext.napt.client.entity";
+
+option java_outer_classname="DataFrameEntity";
+
+message DataFrame{
+
+  int32 code = 1;
+
+  string message = 2;
+
+//  数据
+  bytes data = 3;
+
+//  用于server portstart 和 remote  映射
+  string remoteChannelId = 4;
+
+//  预留字段
+  string bak1 = 5;
+  string bak2 = 6;
+  string bak3 = 7;
+  string bak4 = 8;
+  string bak5 = 9;
+
+}
+
