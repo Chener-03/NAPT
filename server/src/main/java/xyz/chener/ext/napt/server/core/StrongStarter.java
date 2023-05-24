@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -31,6 +32,7 @@ import java.lang.reflect.Proxy;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,7 @@ public class StrongStarter {
             MybatisConfiguration mbpConfig = new MybatisConfiguration();
             mbpConfig.setMapUnderscoreToCamelCase(true);
             mbpConfig.setUseGeneratedKeys(true);
+            mbpConfig.setLogImpl(StdOutImpl.class);
             GlobalConfig globalConfig = GlobalConfigUtils.getGlobalConfig(mbpConfig);
             globalConfig.setSqlInjector(new DefaultSqlInjector());
             globalConfig.setIdentifierGenerator(new DefaultIdentifierGenerator());
@@ -71,6 +74,18 @@ public class StrongStarter {
             mbpConfig.setEnvironment(environment);
             sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(mbpConfig);
             checkTable();
+
+
+/*            ClientItem ci = new ClientItem();
+            ci.setClientUid("ABCD123456789");
+            ci.setClientAddr("127.0.0.1:8080");
+            ci.setServerPort(9999);
+            ci.setSpeedLimit(-1L);
+            ci.setCreateTime(new Date());
+            ci.setMaxFlowLimit(10000000L);
+            ci.setFlow(0L);
+            int insert = StrongStarter.getMapper(ClientItemMapper.class).insert(ci);
+ */
 
         }catch (Exception e)
         {
@@ -159,7 +174,15 @@ public class StrongStarter {
         return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, (proxy, method, args) -> {
             try(SqlSession session = Continer.get(StrongStarter.class).getSqlSessionFactory().openSession()) {
                 Object sourceObj = session.getMapper(clazz);
-                return method.invoke(sourceObj,args);
+                Object result = null;
+                try {
+                    result = method.invoke(sourceObj, args);
+                    session.commit();
+                }catch (Throwable exception){
+                    session.rollback();
+                    throw exception;
+                }
+                return result;
             }
         });
     }

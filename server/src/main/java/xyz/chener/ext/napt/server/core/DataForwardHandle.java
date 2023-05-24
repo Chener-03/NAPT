@@ -28,6 +28,7 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 case DataFrameCode.ACCESS -> Handler.access(ctx,data,false);
                 case DataFrameCode.ACCESS_FORCE -> Handler.access(ctx,data,true);
                 case DataFrameCode.CLIENT_CHANNEL_ACCEPT -> Handler.onClientData(ctx,data);
+                case DataFrameCode.CLIENT_CLOSE_REMOTE_CHANNEL -> Handler.onClientCloseRemoteChannel(ctx,data);
             }
         }else {
             ctx.channel().close();
@@ -88,7 +89,7 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                         }catch (Exception ignored){ }
                     }
 
-                    String json = new ObjectMapper().writeValueAsString(clients.stream().map(ClientItem::getClientAddr));
+                    String json = new ObjectMapper().writeValueAsString(clients.stream().map(ClientItem::getClientAddr).toList());
                     ctx.channel().writeAndFlush(DataFrameEntity.DataFrame.newBuilder()
                             .setCode(DataFrameCode.ACCESS_SUCCESS)
                             .setMessage(json)
@@ -151,6 +152,21 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 try {
                     requestNts.forEach(RequestNt::stop);
                 }catch (Exception ignored){}
+            }
+        }
+
+        public static void onClientCloseRemoteChannel(ChannelHandlerContext ctx,DataFrameEntity.DataFrame data){
+            String clientUID = findClientUidByChannelId(ctx.channel().id().asLongText());
+            if (clientUID == null){
+                return;
+            }
+
+            List<RequestNt> requestNts = ConnectCache.portStarts.get(clientUID);
+            for (RequestNt nt : requestNts) {
+                if (nt.getClientAddr().equals(data.getMessage())){
+                    nt.closeOneChannel(data.getRemoteChannelId());
+                    break;
+                }
             }
         }
 

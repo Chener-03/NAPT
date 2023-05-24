@@ -48,4 +48,7 @@ public class DataFrameCode {
     public static final int CLIENT_FLOW_LIMIT = 16;
 
 
+    // 后端映射地址主动关闭remoteChannel
+    public static final int CLIENT_CLOSE_REMOTE_CHANNEL = 17;
+
 }

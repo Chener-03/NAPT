@@ -17,6 +17,7 @@ import xyz.chener.ext.napt.server.entity.DataFrameEntity;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -98,6 +99,12 @@ public class RequestNt {
         }
     }
 
+    public void closeOneChannel(String channelId){
+        ChannelHandlerContext channelHandlerContext = map.get(channelId);
+        if (Objects.nonNull(channelHandlerContext))
+            channelHandlerContext.channel().close();
+    }
+
     public void write(String remoteChannelId,byte[] data)
     {
         ChannelHandlerContext channelHandlerContext = map.get(remoteChannelId);
@@ -133,6 +140,9 @@ public class RequestNt {
                 future.channel().closeFuture().sync();
             }catch (Exception exception)
             {
+                if (exception instanceof InterruptedException){
+                    Thread.currentThread().interrupt();
+                }
                 channel = null;
                 if (isStart)
                 {
@@ -146,10 +156,11 @@ public class RequestNt {
                                 .setRemoteChannelId(channelId).build();
                         context.channel().writeAndFlush(dataFrame);
                     }
-
                     try {
                         Thread.sleep(5000);
-                    } catch (InterruptedException ignored) {}
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                 }
             }
             channel = null;
@@ -187,25 +198,27 @@ public class RequestNt {
 
         private void sendData(byte[] bts,String channelIdLongText)
         {
-            String channelId = ConnectCache.clientChannel.get(clientUid);
-            ChannelHandlerContext context = null;
-            if (channelId != null && (context=ConnectCache.channelMap.get(channelId))!=null){
+            try {
+                String channelId = ConnectCache.clientChannel.get(clientUid);
+                ChannelHandlerContext context = null;
+                if (channelId != null && (context=ConnectCache.channelMap.get(channelId))!=null){
 
-                TrafficCounter trafficCounter = Continer.get(TrafficCounter.class);
-                if (trafficCounter != null){
-                    if (!trafficCounter.add(this.clientUid,clientAddr,port,Integer.valueOf(bts.length).longValue())) {
-                        trafficCounter.sendFlow(context,clientUid,port,clientAddr);
-                        return;
+                    TrafficCounter trafficCounter = Continer.get(TrafficCounter.class);
+                    if (trafficCounter != null){
+                        if (!trafficCounter.add(this.clientUid,clientAddr,port,Integer.valueOf(Optional.ofNullable(bts).orElse(new byte[0]).length).longValue())) {
+                            trafficCounter.sendFlow(context,clientUid,port,clientAddr);
+                            return;
+                        }
                     }
-                }
 
-                DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
-                        .setCode(DataFrameCode.REMOTE_CHANNEL_ACCEPT)
-                        .setMessage(String.valueOf(clientAddr))
-                        .setData(ByteString.copyFrom(bts))
-                        .setRemoteChannelId(channelIdLongText).build();
-                context.channel().writeAndFlush(dataFrame);
-            }
+                    DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
+                            .setCode(DataFrameCode.REMOTE_CHANNEL_ACCEPT)
+                            .setMessage(String.valueOf(clientAddr))
+                            .setData(ByteString.copyFrom(bts))
+                            .setRemoteChannelId(channelIdLongText).build();
+                    context.channel().writeAndFlush(dataFrame);
+                }
+            }catch (Exception ignored){}
         }
 
         @Override

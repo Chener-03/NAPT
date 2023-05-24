@@ -11,6 +11,8 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import lombok.extern.slf4j.Slf4j;
 import xyz.chener.ext.napt.client.entity.DataFrameEntity;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @Author: chenzp
  * @Date: 2023/05/23/15:53
@@ -21,7 +23,8 @@ import xyz.chener.ext.napt.client.entity.DataFrameEntity;
 @Slf4j
 public class ClientCore {
 
-    private static EventLoopGroup group = new NioEventLoopGroup(10);
+    private EventLoopGroup group = new NioEventLoopGroup(10);
+
 
     private final Thread thread ;
 
@@ -38,6 +41,12 @@ public class ClientCore {
         if (channel != null)
             channel.close();
         group.shutdownGracefully();
+    }
+
+    public void sendToServer(DataFrameEntity.DataFrame dataFrame){
+        if (channel != null){
+            channel.writeAndFlush(dataFrame);
+        }
     }
 
 
@@ -71,6 +80,9 @@ public class ClientCore {
                 log.info("连接服务器成功");
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
+                if (e instanceof InterruptedException){
+                    Thread.currentThread().interrupt();
+                }
                 log.error(e.getMessage());
             } finally {
                 channel = null;
