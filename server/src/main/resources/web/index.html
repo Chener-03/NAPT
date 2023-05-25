@@ -9,18 +9,73 @@
     <script src="https://unpkg.com/tdesign-vue-next/dist/tdesign.min.js"></script>
 </head>
 <body>
-<div style="text-align: center;width: 100%" id="app">
-    1
+<div style="text-align: center;width: 100%;" id="app">
+
+    <t-space style="width: 100%" direction="vertical">
+        <t-card :bordered="true" shadow>
+            1234
+        </t-card>
+
+        <t-card :bordered="true" shadow>
+            <t-table row-key="id" :data="clientList" :columns="columns" />
+        </t-card>
+    </t-space>
+
+
+
+
+
+
+
 
 </div>
 </body>
 <script>
     const { createApp, reactive, toRefs ,ref,onMounted } = Vue
-    const data = reactive({})
+    const data = reactive({
+        clientList: [],
+    })
+    const columns =[
+        {
+            colKey: 'id',
+            title: 'ID',
+            ellipsis: true,
+        },
+        {
+            colKey: 'clientUid',
+            title: 'Client授权码',
+            ellipsis: true,
+        },
+        {
+            colKey: 'clientAddr',
+            title: '映射地址',
+            ellipsis: true,
+        },
+        {
+            colKey: 'serverPort',
+            title: '请求端口',
+            ellipsis: true,
+        },
+        {
+            colKey: 'maxFlowLimit',
+            title: '流量限制',
+            ellipsis: true,
+        },
+        {
+            colKey: 'speedLimit',
+            title: '速度限制',
+            ellipsis: true,
+        },
+        {
+            colKey: 'remark',
+            title: '备注',
+            ellipsis: true,
+        }
+    ]
     const app = createApp({
         setup(){
             return {
-                ...data
+                ...data,columns
             }
         }
     })
@@ -28,3 +83,11 @@
     app.mount("#app")
 </script>
 </html>
+<style>
+    body{
+        margin: 0;
+
+        background-color: #efefef;
+        padding: 30px
+    }
+</style>

@@ -64,6 +64,10 @@ public class RequestNt {
         return port;
     }
 
+    public ConcurrentHashMap<String, ChannelHandlerContext> getMap() {
+        return map;
+    }
+
     public GlobalTrafficShapingHandler getSpeedLimitHandler() {
         return speedLimitHandler;
     }
@@ -214,7 +218,7 @@ public class RequestNt {
                     DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
                             .setCode(DataFrameCode.REMOTE_CHANNEL_ACCEPT)
                             .setMessage(String.valueOf(clientAddr))
-                            .setData(ByteString.copyFrom(bts))
+                            .setData(ByteString.copyFrom(Optional.ofNullable(bts).orElse(new byte[0])))
                             .setRemoteChannelId(channelIdLongText).build();
                     context.channel().writeAndFlush(dataFrame);
                 }
@@ -244,6 +248,8 @@ public class RequestNt {
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             doClose(ctx);
+            log.error("OnePortForwardHandle exceptionCaught:{}",cause.getMessage());
+            ctx.channel().close();
         }
     }
 

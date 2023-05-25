@@ -30,6 +30,8 @@ public class ClientCore {
 
     private volatile Channel channel = null;
 
+    private ClientDataHandle clientDataHandle;
+
     public ClientCore(){
         thread = new Thread(this::run);
         thread.setName("ClientCoreThread");
@@ -61,14 +63,14 @@ public class ClientCore {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             Boolean forceAccess = Boolean.parseBoolean(Continer.get(ConfigLoader.class).get(ConfigLoader.KeyEnum.FORCE_ACCESS));
                             String uid = Continer.get(ConfigLoader.class).get(ConfigLoader.KeyEnum.UID);
-
+                            clientDataHandle = new ClientDataHandle(forceAccess,uid);
 
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             pipeline.addLast(new ProtobufVarint32FrameDecoder());
                             pipeline.addLast(new ProtobufDecoder(DataFrameEntity.DataFrame.getDefaultInstance()));
                             pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
                             pipeline.addLast(new ProtobufEncoder());
-                            pipeline.addLast( new ClientDataHandle(forceAccess,uid));
+                            pipeline.addLast(clientDataHandle);
                         }
                     });
 
@@ -100,7 +102,7 @@ public class ClientCore {
 
     private void onclose(){
         // 关闭本地已建立连接的Addr
-
+        clientDataHandle.stopAllRemoteRequest();
     }
 
 }

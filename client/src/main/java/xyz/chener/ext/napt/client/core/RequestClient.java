@@ -13,6 +13,7 @@ import xyz.chener.ext.napt.client.entity.DataFrameCode;
 import xyz.chener.ext.napt.client.entity.DataFrameEntity;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @Author: chenzp
@@ -57,6 +58,10 @@ public class RequestClient {
 
     public String getRemoteChannelId() {
         return remoteChannelId;
+    }
+
+    public Channel getChannel() {
+        return channel;
     }
 
     public void sendData(byte[] data) {
@@ -129,7 +134,7 @@ public class RequestClient {
                                             .setCode(DataFrameCode.CLIENT_CHANNEL_ACCEPT)
                                             .setRemoteChannelId(remoteChannelId)
                                             .setMessage(clientAddr)
-                                            .setData(ByteString.copyFrom(b))
+                                            .setData(ByteString.copyFrom(Optional.ofNullable(b).orElse(new byte[0])))
                                             .build();
                                     Continer.get(ClientCore.class).sendToServer(dataFrame);
                                 }
@@ -138,6 +143,8 @@ public class RequestClient {
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                                 sendClientClose();
+                                ctx.channel().close();
+                                log.error("远程 channel [{}] 与 [{}] 客户端地址传输异常 : {}", remoteChannelId, clientAddr, cause.getMessage());
                             }
                         });
                     }

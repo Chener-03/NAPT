@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import xyz.chener.ext.napt.server.entity.ClientItem;
@@ -14,12 +15,15 @@ import xyz.chener.ext.napt.server.mapper.ClientItemMapper;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 /**
  * 主要与客户端通信处理类
  */
+
+@Slf4j
 public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(@NotNull ChannelHandlerContext ctx, @NotNull Object msg) throws Exception {
@@ -29,6 +33,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 case DataFrameCode.ACCESS_FORCE -> Handler.access(ctx,data,true);
                 case DataFrameCode.CLIENT_CHANNEL_ACCEPT -> Handler.onClientData(ctx,data);
                 case DataFrameCode.CLIENT_CLOSE_REMOTE_CHANNEL -> Handler.onClientCloseRemoteChannel(ctx,data);
+
+                case DataFrameCode.GET_CLIENT_CONNECTS -> Handler.onGetClientConnects(ctx,data);
             }
         }else {
             ctx.channel().close();
@@ -43,7 +49,9 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("传输异常:{}",cause.getMessage());
         Handler.onClientClose(ctx.channel().id().asLongText());
+        ctx.channel().close();
     }
 
     private static class Handler {
@@ -167,6 +175,18 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                     nt.closeOneChannel(data.getRemoteChannelId());
                     break;
                 }
+            }
+        }
+
+        public static void onGetClientConnects(ChannelHandlerContext ctx,DataFrameEntity.DataFrame data){
+            try {
+                Map map = new ObjectMapper().readValue(data.getMessage(), Map.class);
+                String code = map.get("code").toString();
+                if (HttpServer.clientConnInfoCache.containsKey(code)) {
+                    HttpServer.clientConnInfoCache.put(code,map.toString());
+                }
+            }catch (Exception ex){
+                log.warn("client connect info parse error:{}",ex.getMessage());
             }
         }
 

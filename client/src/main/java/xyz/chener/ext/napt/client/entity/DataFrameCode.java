@@ -51,4 +51,8 @@ public class DataFrameCode {
     // 后端映射地址主动关闭remoteChannel
     public static final int CLIENT_CLOSE_REMOTE_CHANNEL = 17;
 
+
+    // 获取客户端连接信息
+    public static final int GET_CLIENT_CONNECTS = 50;
+
 }

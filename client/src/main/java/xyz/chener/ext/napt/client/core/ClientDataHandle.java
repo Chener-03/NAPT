@@ -1,6 +1,7 @@
 package xyz.chener.ext.napt.client.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import xyz.chener.ext.napt.client.entity.DataFrameCode;
 import xyz.chener.ext.napt.client.entity.DataFrameEntity;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -81,8 +83,34 @@ public class ClientDataHandle extends ChannelInboundHandlerAdapter {
                         requestClient.stop();
                     } catch (Exception ignored) { }
                 }
+
+                case DataFrameCode.CLIENT_FLOW_LIMIT -> log.warn(data.getMessage());
+
+                case DataFrameCode.GET_CLIENT_CONNECTS -> {
+                    LinkedHashMap<String, String> rm = new LinkedHashMap<>();
+                    remoteRequestMap.forEach((k,v)->{
+                        Channel cn = v.getChannel();
+                        rm.put(k,cn!=null?cn.remoteAddress().toString():"NULL");
+                    });
+                    rm.put("code",data.getMessage());
+                    DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
+                            .setCode(DataFrameCode.GET_CLIENT_CONNECTS)
+                            .setMessage(new ObjectMapper().writeValueAsString(rm))
+                            .build();
+                    ctx.channel().writeAndFlush(dataFrame);
+                }
             }
         }
+    }
+
+
+    public void stopAllRemoteRequest(){
+        remoteRequestMap.forEach((k,v)->{
+            try {
+                v.stop();
+            } catch (Exception ignored) { }
+        });
+        remoteRequestMap.clear();
     }
 
 }
