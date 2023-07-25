@@ -19,9 +19,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import xyz.chener.ext.napt.server.Main;
 import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.mapper.ClientItemMapper;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,6 +58,7 @@ public class StrongStarter {
             dataSource.setUsername("");
             dataSource.setPassword("");
             dataSource.setDriverClassName("org.h2.Driver");
+            Continer.put(DruidDataSource.class,dataSource);
 
             MybatisConfiguration mbpConfig = new MybatisConfiguration();
             mbpConfig.setMapUnderscoreToCamelCase(true);
@@ -74,7 +77,6 @@ public class StrongStarter {
             mbpConfig.setEnvironment(environment);
             sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(mbpConfig);
             checkTable();
-
 
 /*            ClientItem ci = new ClientItem();
             ci.setClientUid("ABCD123456789");
@@ -133,7 +135,7 @@ public class StrongStarter {
                 Enumeration<JarEntry> entries = jarFile.entries();
                 while (entries.hasMoreElements()) {
                     JarEntry jarEntry = entries.nextElement();
-                    if (jarEntry.getName().endsWith(".xml")) {
+                    if (jarEntry.getName().endsWith(".xml") && jarEntry.getName().startsWith(classPath)) {
                         InputStream in = jarFile.getInputStream(jarEntry);
                         XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(in, configuration, jarEntry.getName(), configuration.getSqlFragments());
                         xmlMapperBuilder.parse();

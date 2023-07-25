@@ -1,20 +1,27 @@
 package xyz.chener.ext.napt.server.core;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.javalin.Javalin;
 import io.javalin.http.ContentType;
 import io.javalin.security.RouteRole;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
 import xyz.chener.ext.napt.server.mapper.ClientItemMapper;
 
+import javax.sql.DataSource;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -192,6 +199,73 @@ public class HttpServer {
             sb.append("\n\n");
             ctx.result(sb.toString());
         },ROLES[0]);
+
+
+        jl.post(ROLES_PATH_PREFIX[0]+"/debug/execQuery",ctx->{
+            String json = ctx.body();
+            ObjectMapper om = new ObjectMapper();
+            Map<String,String> map = om.readValue(json, new TypeReference<Map<String, String>>() {});
+            if (!map.containsKey("sql")) {
+                ctx.result("未找到sql");
+                return;
+            }
+
+            String sql = map.get("sql");
+            DruidDataSource dataSource = Continer.get(DruidDataSource.class);
+            try (Connection conn = dataSource.getConnection()){
+                Statement statement = conn.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql);
+                List<Object> res = new ArrayList<>();
+
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                while (resultSet.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = metaData.getColumnName(i);
+                        Object columnValue = resultSet.getObject(i);
+                        row.put(columnName, columnValue);
+                    }
+                    res.add(row);
+                }
+
+                ctx.result(om.writerWithDefaultPrettyPrinter().writeValueAsString(res));
+            }catch (Exception exception){
+                ctx.result(exception.getMessage());
+            }
+        });
+
+        jl.post(ROLES_PATH_PREFIX[0]+"/debug/execUpdate",ctx->{
+            String json = ctx.body();
+            ObjectMapper om = new ObjectMapper();
+            Map<String,String> map = om.readValue(json, new TypeReference<Map<String, String>>() {});
+            if (!map.containsKey("sql")) {
+                ctx.result("未找到sql");
+                return;
+            }
+
+            String sql = map.get("sql");
+            DruidDataSource dataSource = Continer.get(DruidDataSource.class);
+            try (Connection conn = dataSource.getConnection()){
+                Statement statement = conn.createStatement();
+                int i = statement.executeUpdate(sql);
+                ctx.result("影响行数: " + i + " 行");
+            }catch (Exception exception){
+                ctx.result(exception.getMessage());
+            }
+        });
+
+        jl.get(ROLES_PATH_PREFIX[0]+"/debug/flushByUid",ctx -> {
+            String uid = ctx.queryParam("uid");
+            if (StringUtils.hasText(uid)){
+                Continer.get(ClientManager.class).flush(uid);
+                ctx.result("OK");
+            }else {
+                ctx.result("FAIL");
+            }
+        });
+
 
     }
 
