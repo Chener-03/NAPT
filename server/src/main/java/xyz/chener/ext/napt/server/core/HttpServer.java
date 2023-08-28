@@ -198,7 +198,7 @@ public class HttpServer {
             removeList.forEach(clientConnInfoCache::remove);
             sb.append("\n\n");
             ctx.result(sb.toString());
-        },ROLES[0]);
+        });
 
 
         jl.post(ROLES_PATH_PREFIX[0]+"/debug/execQuery",ctx->{
