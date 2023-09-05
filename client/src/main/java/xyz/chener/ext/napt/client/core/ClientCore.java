@@ -9,6 +9,7 @@ import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import lombok.extern.slf4j.Slf4j;
+import xyz.chener.ext.napt.client.entity.DataFrameCode;
 import xyz.chener.ext.napt.client.entity.DataFrameEntity;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,6 +37,9 @@ public class ClientCore {
         thread = new Thread(this::run);
         thread.setName("ClientCoreThread");
         thread.start();
+        Thread heatBeatThread = new Thread(this::heartBeat);
+        heatBeatThread.setDaemon(true);
+        heatBeatThread.start();
     }
 
     public void stop(){
@@ -97,6 +101,20 @@ public class ClientCore {
                     } catch (InterruptedException e) { }
                 }
             }
+        }
+    }
+
+    private void heartBeat(){
+        while (!Thread.currentThread().isInterrupted()){
+            try {
+                Thread.sleep(1000 * 60L);
+                if (channel != null){
+                    DataFrameEntity.DataFrame data = DataFrameEntity.DataFrame.newBuilder().setCode(DataFrameCode.HEART_BEAT).build();
+                    channel.writeAndFlush(data);
+                }
+            }catch (InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }catch (Exception ignored){}
         }
     }
 

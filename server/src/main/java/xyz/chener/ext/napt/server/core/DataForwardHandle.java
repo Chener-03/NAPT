@@ -33,8 +33,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 case DataFrameCode.ACCESS_FORCE -> Handler.access(ctx,data,true);
                 case DataFrameCode.CLIENT_CHANNEL_ACCEPT -> Handler.onClientData(ctx,data);
                 case DataFrameCode.CLIENT_CLOSE_REMOTE_CHANNEL -> Handler.onClientCloseRemoteChannel(ctx,data);
-
                 case DataFrameCode.GET_CLIENT_CONNECTS -> Handler.onGetClientConnects(ctx,data);
+                case DataFrameCode.HEART_BEAT ->Handler.onHeartBeatMessage(ctx,data);
             }
         }else {
             ctx.channel().close();
@@ -189,6 +189,11 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 log.warn("client connect info parse error:{}",ex.getMessage());
             }
         }
+
+        public static void onHeartBeatMessage(ChannelHandlerContext ctx,DataFrameEntity.DataFrame data){
+            ctx.channel().writeAndFlush(data);
+        }
+
 
         private static String findClientUidByChannelId(String channelId)
         {
