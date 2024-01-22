@@ -9,6 +9,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import xyz.chener.ext.napt.server.core.ConnectCache;
@@ -34,11 +35,16 @@ public class RequestNtTcp {
     private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final NioEventLoopGroup workGroup = new NioEventLoopGroup(5);
 
+    @Getter
     private final String clientUid;
+
+    @Getter
     private final Integer port;
+
+    @Getter
     private final String clientAddr;
 
-    private Thread thread;
+    private final Thread thread;
 
     private Channel channel = null;
 
@@ -46,33 +52,15 @@ public class RequestNtTcp {
 
     private final Lock lock = new ReentrantLock();
 
-    // 存放当前端口连接通道
+    // 存放当前端口连接通道   channelId -> channel
+    @Getter
     private final ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
 
     // 进出流量限制
     private final int speedLimit;
 
+    @Getter
     private GlobalTrafficShapingHandler speedLimitHandler = null;
-
-    public String getClientAddr() {
-        return clientAddr;
-    }
-
-    public String getClientUid() {
-        return clientUid;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public ConcurrentHashMap<String, ChannelHandlerContext> getMap() {
-        return map;
-    }
-
-    public GlobalTrafficShapingHandler getSpeedLimitHandler() {
-        return speedLimitHandler;
-    }
 
     public RequestNtTcp(String clientUid, Integer port, String clientAddr, int speedLimit) {
         if (speedLimit == -1){
@@ -84,8 +72,7 @@ public class RequestNtTcp {
         this.port = port;
         this.clientAddr = clientAddr;
         isStart = true;
-        thread = new Thread(this::run);
-        thread.start();
+        thread = Thread.ofVirtual().name("RequestNtTcp-"+clientUid+"-"+port).start(this::run);
     }
 
     public void stop()
