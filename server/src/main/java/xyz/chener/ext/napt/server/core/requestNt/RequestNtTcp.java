@@ -1,4 +1,4 @@
-package xyz.chener.ext.napt.server.core;
+package xyz.chener.ext.napt.server.core.requestNt;
 
 import com.google.protobuf.ByteString;
 import io.netty.bootstrap.ServerBootstrap;
@@ -8,10 +8,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.traffic.ChannelTrafficShapingHandler;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import xyz.chener.ext.napt.server.core.ConnectCache;
+import xyz.chener.ext.napt.server.core.Continer;
+import xyz.chener.ext.napt.server.core.TrafficCounter;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
 
@@ -27,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 对应每个端口的转发服务
  */
 @Slf4j
-public class RequestNt {
+public class RequestNtTcp {
 
     private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final NioEventLoopGroup workGroup = new NioEventLoopGroup(5);
@@ -72,7 +74,7 @@ public class RequestNt {
         return speedLimitHandler;
     }
 
-    public RequestNt(String clientUid, Integer port, String clientAddr, int speedLimit) {
+    public RequestNtTcp(String clientUid, Integer port, String clientAddr, int speedLimit) {
         if (speedLimit == -1){
             this.speedLimit = Integer.MAX_VALUE;
         }else {

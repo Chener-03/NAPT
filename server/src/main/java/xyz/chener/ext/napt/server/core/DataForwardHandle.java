@@ -1,13 +1,12 @@
 package xyz.chener.ext.napt.server.core;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.Assert;
+import xyz.chener.ext.napt.server.core.requestNt.RequestNtTcp;
 import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
@@ -17,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Function;
 
 /**
  * 主要与客户端通信处理类
@@ -78,10 +76,10 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                     }
 
                     if (isForce){
-                        List<RequestNt> requestNts = ConnectCache.portStarts.remove(data.getMessage());
-                        if (requestNts != null){
+                        List<RequestNtTcp> requestNtTcps = ConnectCache.portStarts.remove(data.getMessage());
+                        if (requestNtTcps != null){
                             try {
-                                requestNts.forEach(RequestNt::stop);
+                                requestNtTcps.forEach(RequestNtTcp::stop);
                             }catch (Exception ignored){}
                         }
 
@@ -106,8 +104,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                     ConnectCache.clientChannel.put(data.getMessage(),ctx.channel().id().asLongText());
                     ConnectCache.channelMap.put(ctx.channel().id().asLongText(),ctx);
 
-                    List<RequestNt> ps = new CopyOnWriteArrayList<>();
-                    clients.forEach(ec-> ps.add(new RequestNt(ec.getClientUid(), ec.getServerPort(), ec.getClientAddr(),ec.getSpeedLimit().intValue())));
+                    List<RequestNtTcp> ps = new CopyOnWriteArrayList<>();
+                    clients.forEach(ec-> ps.add(new RequestNtTcp(ec.getClientUid(), ec.getServerPort(), ec.getClientAddr(),ec.getSpeedLimit().intValue())));
                     ConnectCache.portStarts.put(data.getMessage(),ps);
 
                 }catch (Exception exception){
@@ -131,8 +129,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 return;
             }
 
-            List<RequestNt> requestNts = ConnectCache.portStarts.get(clientUID);
-            requestNts.forEach(e->{
+            List<RequestNtTcp> requestNtTcps = ConnectCache.portStarts.get(clientUID);
+            requestNtTcps.forEach(e->{
                 if(e.getClientAddr().equals(clientAddr)){
                     byte[] senddata = data.getData().toByteArray();
                     TrafficCounter trafficCounter = Continer.get(TrafficCounter.class);
@@ -155,10 +153,10 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
 
             ConnectCache.clientChannel.remove(clientUID);
             ConnectCache.channelMap.remove(clientChannelId);
-            List<RequestNt> requestNts = ConnectCache.portStarts.remove(clientUID);
-            if (requestNts != null){
+            List<RequestNtTcp> requestNtTcps = ConnectCache.portStarts.remove(clientUID);
+            if (requestNtTcps != null){
                 try {
-                    requestNts.forEach(RequestNt::stop);
+                    requestNtTcps.forEach(RequestNtTcp::stop);
                 }catch (Exception ignored){}
             }
         }
@@ -169,8 +167,8 @@ public class DataForwardHandle  extends ChannelInboundHandlerAdapter {
                 return;
             }
 
-            List<RequestNt> requestNts = ConnectCache.portStarts.get(clientUID);
-            for (RequestNt nt : requestNts) {
+            List<RequestNtTcp> requestNtTcps = ConnectCache.portStarts.get(clientUID);
+            for (RequestNtTcp nt : requestNtTcps) {
                 if (nt.getClientAddr().equals(data.getMessage())){
                     nt.closeOneChannel(data.getRemoteChannelId());
                     break;

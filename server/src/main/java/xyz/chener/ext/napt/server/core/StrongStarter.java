@@ -66,7 +66,7 @@ public class StrongStarter {
             mbpConfig.setLogImpl(StdOutImpl.class);
             GlobalConfig globalConfig = GlobalConfigUtils.getGlobalConfig(mbpConfig);
             globalConfig.setSqlInjector(new DefaultSqlInjector());
-            globalConfig.setIdentifierGenerator(new DefaultIdentifierGenerator());
+            globalConfig.setIdentifierGenerator(DefaultIdentifierGenerator.getInstance());
             globalConfig.setSuperMapperClass(BaseMapper.class);
             this.registryMapperXml(mbpConfig, "mapper/");
             mbpConfig.addMappers("xyz.chener.ext.napt.server.mapper");
@@ -78,16 +78,6 @@ public class StrongStarter {
             sqlSessionFactory = new MybatisSqlSessionFactoryBuilder().build(mbpConfig);
             checkTable();
 
-/*            ClientItem ci = new ClientItem();
-            ci.setClientUid("ABCD123456789");
-            ci.setClientAddr("127.0.0.1:8080");
-            ci.setServerPort(9999);
-            ci.setSpeedLimit(-1L);
-            ci.setCreateTime(new Date());
-            ci.setMaxFlowLimit(10000000L);
-            ci.setFlow(0L);
-            int insert = StrongStarter.getMapper(ClientItemMapper.class).insert(ci);
- */
 
         }catch (Exception e)
         {
