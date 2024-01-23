@@ -11,7 +11,9 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 
+@EqualsAndHashCode(callSuper = false)
 @TableName("client_item")
+@Data
 public class ClientItem extends Model<ClientItem> {
 
     @TableId(type = IdType.AUTO)
@@ -24,6 +26,9 @@ public class ClientItem extends Model<ClientItem> {
 
     // 用于服务器被请求的端口
     private Integer serverPort;
+
+    // 类型 tcp or  udp
+    private Integer requestNtType;
 
     // 已使用流量 字节
     private Long flow;
@@ -39,75 +44,6 @@ public class ClientItem extends Model<ClientItem> {
 
     private String remark;
 
-    public String getRemark() {
-        return remark;
-    }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getClientUid() {
-        return clientUid;
-    }
-
-    public void setClientUid(String clientUid) {
-        this.clientUid = clientUid;
-    }
-
-    public String getClientAddr() {
-        return clientAddr;
-    }
-
-    public void setClientAddr(String clientAddr) {
-        this.clientAddr = clientAddr;
-    }
-
-    public Integer getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(Integer serverPort) {
-        this.serverPort = serverPort;
-    }
-
-    public Long getFlow() {
-        return flow;
-    }
-
-    public void setFlow(Long flow) {
-        this.flow = flow;
-    }
-
-    public Long getMaxFlowLimit() {
-        return maxFlowLimit;
-    }
-
-    public void setMaxFlowLimit(Long maxFlowLimit) {
-        this.maxFlowLimit = maxFlowLimit;
-    }
-
-    public Long getSpeedLimit() {
-        return speedLimit;
-    }
-
-    public void setSpeedLimit(Long speedLimit) {
-        this.speedLimit = speedLimit;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

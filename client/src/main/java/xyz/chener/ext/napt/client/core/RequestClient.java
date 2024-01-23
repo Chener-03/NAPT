@@ -95,7 +95,7 @@ public class RequestClient {
     private void sendClientClose(){
         DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
                 .setCode(DataFrameCode.CLIENT_CLOSE_REMOTE_CHANNEL)
-                .setRemoteChannelId(remoteChannelId)
+                .setTcpRemoteChannelId(remoteChannelId)
                 .setMessage(clientAddr)
                 .build();
         Continer.get(ClientCore.class).sendToServer(dataFrame);

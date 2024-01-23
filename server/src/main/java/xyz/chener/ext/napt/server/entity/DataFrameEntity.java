@@ -28,7 +28,7 @@ public final class DataFrameEntity {
      * <code>string message = 2;</code>
      * @return The message.
      */
-    java.lang.String getMessage();
+    String getMessage();
     /**
      * <code>string message = 2;</code>
      * @return The bytes for message.
@@ -48,91 +48,99 @@ public final class DataFrameEntity {
 
     /**
      * <pre>
-     *  用于server portstart 和 remote  映射
+     * 1TCP  2UDP
      * </pre>
      *
-     * <code>string remoteChannelId = 4;</code>
-     * @return The remoteChannelId.
+     * <code>int32 requestNtType = 4;</code>
+     * @return The requestNtType.
      */
-    java.lang.String getRemoteChannelId();
-    /**
-     * <pre>
-     *  用于server portstart 和 remote  映射
-     * </pre>
-     *
-     * <code>string remoteChannelId = 4;</code>
-     * @return The bytes for remoteChannelId.
-     */
-    com.google.protobuf.ByteString
-        getRemoteChannelIdBytes();
+    int getRequestNtType();
 
     /**
      * <pre>
-     *  预留字段
+     *  用于tcp:server portstart 和 remote  映射
      * </pre>
      *
-     * <code>string bak1 = 5;</code>
-     * @return The bak1.
+     * <code>string tcpRemoteChannelId = 5;</code>
+     * @return The tcpRemoteChannelId.
      */
-    java.lang.String getBak1();
+    String getTcpRemoteChannelId();
     /**
      * <pre>
-     *  预留字段
+     *  用于tcp:server portstart 和 remote  映射
      * </pre>
      *
-     * <code>string bak1 = 5;</code>
-     * @return The bytes for bak1.
+     * <code>string tcpRemoteChannelId = 5;</code>
+     * @return The bytes for tcpRemoteChannelId.
      */
     com.google.protobuf.ByteString
-        getBak1Bytes();
+        getTcpRemoteChannelIdBytes();
 
     /**
-     * <code>string bak2 = 6;</code>
-     * @return The bak2.
+     * <pre>
+     * 用于 udp： 服务端接受的地址和远程后端地址做映射
+     * </pre>
+     *
+     * <code>string udpRemoteIp = 6;</code>
+     * @return The udpRemoteIp.
      */
-    java.lang.String getBak2();
+    String getUdpRemoteIp();
     /**
-     * <code>string bak2 = 6;</code>
-     * @return The bytes for bak2.
+     * <pre>
+     * 用于 udp： 服务端接受的地址和远程后端地址做映射
+     * </pre>
+     *
+     * <code>string udpRemoteIp = 6;</code>
+     * @return The bytes for udpRemoteIp.
      */
     com.google.protobuf.ByteString
-        getBak2Bytes();
+        getUdpRemoteIpBytes();
 
     /**
-     * <code>string bak3 = 7;</code>
-     * @return The bak3.
+     * <code>int32 udpRemotePort = 7;</code>
+     * @return The udpRemotePort.
      */
-    java.lang.String getBak3();
-    /**
-     * <code>string bak3 = 7;</code>
-     * @return The bytes for bak3.
-     */
-    com.google.protobuf.ByteString
-        getBak3Bytes();
+    int getUdpRemotePort();
 
     /**
-     * <code>string bak4 = 8;</code>
-     * @return The bak4.
+     * <pre>
+     * 客户端UID
+     * </pre>
+     *
+     * <code>string clientUid = 8;</code>
+     * @return The clientUid.
      */
-    java.lang.String getBak4();
+    String getClientUid();
     /**
-     * <code>string bak4 = 8;</code>
-     * @return The bytes for bak4.
+     * <pre>
+     * 客户端UID
+     * </pre>
+     *
+     * <code>string clientUid = 8;</code>
+     * @return The bytes for clientUid.
      */
     com.google.protobuf.ByteString
-        getBak4Bytes();
+        getClientUidBytes();
 
     /**
-     * <code>string bak5 = 9;</code>
-     * @return The bak5.
+     * <pre>
+     * ClientAddress
+     * </pre>
+     *
+     * <code>string clientAddress = 9;</code>
+     * @return The clientAddress.
      */
-    java.lang.String getBak5();
+    String getClientAddress();
     /**
-     * <code>string bak5 = 9;</code>
-     * @return The bytes for bak5.
+     * <pre>
+     * ClientAddress
+     * </pre>
+     *
+     * <code>string clientAddress = 9;</code>
+     * @return The bytes for clientAddress.
      */
     com.google.protobuf.ByteString
-        getBak5Bytes();
+        getClientAddressBytes();
   }
   /**
    * Protobuf type {@code xyz.chener.ext.napt.server.entity.DataFrame}
@@ -149,22 +157,20 @@ public final class DataFrameEntity {
     private DataFrame() {
       message_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
-      remoteChannelId_ = "";
-      bak1_ = "";
-      bak2_ = "";
-      bak3_ = "";
-      bak4_ = "";
-      bak5_ = "";
+      tcpRemoteChannelId_ = "";
+      udpRemoteIp_ = "";
+      clientUid_ = "";
+      clientAddress_ = "";
     }
 
-    @java.lang.Override
+    @Override
     @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
+    protected Object newInstance(
         UnusedPrivateParameter unused) {
       return new DataFrame();
     }
 
-    @java.lang.Override
+    @Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -175,7 +181,7 @@ public final class DataFrameEntity {
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
-        throw new java.lang.NullPointerException();
+        throw new NullPointerException();
       }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -193,7 +199,7 @@ public final class DataFrameEntity {
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
               message_ = s;
               break;
@@ -203,40 +209,38 @@ public final class DataFrameEntity {
               data_ = input.readBytes();
               break;
             }
-            case 34: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 32: {
 
-              remoteChannelId_ = s;
+              requestNtType_ = input.readInt32();
               break;
             }
             case 42: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
-              bak1_ = s;
+              tcpRemoteChannelId_ = s;
               break;
             }
             case 50: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
-              bak2_ = s;
+              udpRemoteIp_ = s;
               break;
             }
-            case 58: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 56: {
 
-              bak3_ = s;
+              udpRemotePort_ = input.readInt32();
               break;
             }
             case 66: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
-              bak4_ = s;
+              clientUid_ = s;
               break;
             }
             case 74: {
-              java.lang.String s = input.readStringRequireUtf8();
+              String s = input.readStringRequireUtf8();
 
-              bak5_ = s;
+              clientAddress_ = s;
               break;
             }
             default: {
@@ -262,15 +266,15 @@ public final class DataFrameEntity {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return xyz.chener.ext.napt.server.entity.DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
+      return DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
     }
 
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    @Override
+    protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return xyz.chener.ext.napt.server.entity.DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_fieldAccessorTable
+      return DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.class, xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.Builder.class);
+              DataFrame.class, Builder.class);
     }
 
     public static final int CODE_FIELD_NUMBER = 1;
@@ -279,26 +283,26 @@ public final class DataFrameEntity {
      * <code>int32 code = 1;</code>
      * @return The code.
      */
-    @java.lang.Override
+    @Override
     public int getCode() {
       return code_;
     }
 
     public static final int MESSAGE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object message_;
+    private volatile Object message_;
     /**
      * <code>string message = 2;</code>
      * @return The message.
      */
-    @java.lang.Override
-    public java.lang.String getMessage() {
-      java.lang.Object ref = message_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getMessage() {
+      Object ref = message_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
+        String s = bs.toStringUtf8();
         message_ = s;
         return s;
       }
@@ -307,14 +311,14 @@ public final class DataFrameEntity {
      * <code>string message = 2;</code>
      * @return The bytes for message.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
         getMessageBytes() {
-      java.lang.Object ref = message_;
-      if (ref instanceof java.lang.String) {
+      Object ref = message_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+                (String) ref);
         message_ = b;
         return b;
       } else {
@@ -332,249 +336,215 @@ public final class DataFrameEntity {
      * <code>bytes data = 3;</code>
      * @return The data.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString getData() {
       return data_;
     }
 
-    public static final int REMOTECHANNELID_FIELD_NUMBER = 4;
-    private volatile java.lang.Object remoteChannelId_;
+    public static final int REQUESTNTTYPE_FIELD_NUMBER = 4;
+    private int requestNtType_;
     /**
      * <pre>
-     *  用于server portstart 和 remote  映射
+     * 1TCP  2UDP
      * </pre>
      *
-     * <code>string remoteChannelId = 4;</code>
-     * @return The remoteChannelId.
+     * <code>int32 requestNtType = 4;</code>
+     * @return The requestNtType.
      */
-    @java.lang.Override
-    public java.lang.String getRemoteChannelId() {
-      java.lang.Object ref = remoteChannelId_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        remoteChannelId_ = s;
-        return s;
-      }
-    }
-    /**
-     * <pre>
-     *  用于server portstart 和 remote  映射
-     * </pre>
-     *
-     * <code>string remoteChannelId = 4;</code>
-     * @return The bytes for remoteChannelId.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getRemoteChannelIdBytes() {
-      java.lang.Object ref = remoteChannelId_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        remoteChannelId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    @Override
+    public int getRequestNtType() {
+      return requestNtType_;
     }
 
-    public static final int BAK1_FIELD_NUMBER = 5;
-    private volatile java.lang.Object bak1_;
+    public static final int TCPREMOTECHANNELID_FIELD_NUMBER = 5;
+    private volatile Object tcpRemoteChannelId_;
     /**
      * <pre>
-     *  预留字段
+     *  用于tcp:server portstart 和 remote  映射
      * </pre>
      *
-     * <code>string bak1 = 5;</code>
-     * @return The bak1.
+     * <code>string tcpRemoteChannelId = 5;</code>
+     * @return The tcpRemoteChannelId.
      */
-    @java.lang.Override
-    public java.lang.String getBak1() {
-      java.lang.Object ref = bak1_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getTcpRemoteChannelId() {
+      Object ref = tcpRemoteChannelId_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bak1_ = s;
+        String s = bs.toStringUtf8();
+        tcpRemoteChannelId_ = s;
         return s;
       }
     }
     /**
      * <pre>
-     *  预留字段
+     *  用于tcp:server portstart 和 remote  映射
      * </pre>
      *
-     * <code>string bak1 = 5;</code>
-     * @return The bytes for bak1.
+     * <code>string tcpRemoteChannelId = 5;</code>
+     * @return The bytes for tcpRemoteChannelId.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
-        getBak1Bytes() {
-      java.lang.Object ref = bak1_;
-      if (ref instanceof java.lang.String) {
+        getTcpRemoteChannelIdBytes() {
+      Object ref = tcpRemoteChannelId_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bak1_ = b;
+                (String) ref);
+        tcpRemoteChannelId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int BAK2_FIELD_NUMBER = 6;
-    private volatile java.lang.Object bak2_;
+    public static final int UDPREMOTEIP_FIELD_NUMBER = 6;
+    private volatile Object udpRemoteIp_;
     /**
-     * <code>string bak2 = 6;</code>
-     * @return The bak2.
+     * <pre>
+     * 用于 udp： 服务端接受的地址和远程后端地址做映射
+     * </pre>
+     *
+     * <code>string udpRemoteIp = 6;</code>
+     * @return The udpRemoteIp.
      */
-    @java.lang.Override
-    public java.lang.String getBak2() {
-      java.lang.Object ref = bak2_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getUdpRemoteIp() {
+      Object ref = udpRemoteIp_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bak2_ = s;
+        String s = bs.toStringUtf8();
+        udpRemoteIp_ = s;
         return s;
       }
     }
     /**
-     * <code>string bak2 = 6;</code>
-     * @return The bytes for bak2.
+     * <pre>
+     * 用于 udp： 服务端接受的地址和远程后端地址做映射
+     * </pre>
+     *
+     * <code>string udpRemoteIp = 6;</code>
+     * @return The bytes for udpRemoteIp.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
-        getBak2Bytes() {
-      java.lang.Object ref = bak2_;
-      if (ref instanceof java.lang.String) {
+        getUdpRemoteIpBytes() {
+      Object ref = udpRemoteIp_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bak2_ = b;
+                (String) ref);
+        udpRemoteIp_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int BAK3_FIELD_NUMBER = 7;
-    private volatile java.lang.Object bak3_;
+    public static final int UDPREMOTEPORT_FIELD_NUMBER = 7;
+    private int udpRemotePort_;
     /**
-     * <code>string bak3 = 7;</code>
-     * @return The bak3.
+     * <code>int32 udpRemotePort = 7;</code>
+     * @return The udpRemotePort.
      */
-    @java.lang.Override
-    public java.lang.String getBak3() {
-      java.lang.Object ref = bak3_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public int getUdpRemotePort() {
+      return udpRemotePort_;
+    }
+
+    public static final int CLIENTUID_FIELD_NUMBER = 8;
+    private volatile Object clientUid_;
+    /**
+     * <pre>
+     * 客户端UID
+     * </pre>
+     *
+     * <code>string clientUid = 8;</code>
+     * @return The clientUid.
+     */
+    @Override
+    public String getClientUid() {
+      Object ref = clientUid_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bak3_ = s;
+        String s = bs.toStringUtf8();
+        clientUid_ = s;
         return s;
       }
     }
     /**
-     * <code>string bak3 = 7;</code>
-     * @return The bytes for bak3.
+     * <pre>
+     * 客户端UID
+     * </pre>
+     *
+     * <code>string clientUid = 8;</code>
+     * @return The bytes for clientUid.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
-        getBak3Bytes() {
-      java.lang.Object ref = bak3_;
-      if (ref instanceof java.lang.String) {
+        getClientUidBytes() {
+      Object ref = clientUid_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bak3_ = b;
+                (String) ref);
+        clientUid_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int BAK4_FIELD_NUMBER = 8;
-    private volatile java.lang.Object bak4_;
+    public static final int CLIENTADDRESS_FIELD_NUMBER = 9;
+    private volatile Object clientAddress_;
     /**
-     * <code>string bak4 = 8;</code>
-     * @return The bak4.
+     * <pre>
+     * ClientAddress
+     * </pre>
+     *
+     * <code>string clientAddress = 9;</code>
+     * @return The clientAddress.
      */
-    @java.lang.Override
-    public java.lang.String getBak4() {
-      java.lang.Object ref = bak4_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
+    @Override
+    public String getClientAddress() {
+      Object ref = clientAddress_;
+      if (ref instanceof String) {
+        return (String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bak4_ = s;
+        String s = bs.toStringUtf8();
+        clientAddress_ = s;
         return s;
       }
     }
     /**
-     * <code>string bak4 = 8;</code>
-     * @return The bytes for bak4.
+     * <pre>
+     * ClientAddress
+     * </pre>
+     *
+     * <code>string clientAddress = 9;</code>
+     * @return The bytes for clientAddress.
      */
-    @java.lang.Override
+    @Override
     public com.google.protobuf.ByteString
-        getBak4Bytes() {
-      java.lang.Object ref = bak4_;
-      if (ref instanceof java.lang.String) {
+        getClientAddressBytes() {
+      Object ref = clientAddress_;
+      if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bak4_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    public static final int BAK5_FIELD_NUMBER = 9;
-    private volatile java.lang.Object bak5_;
-    /**
-     * <code>string bak5 = 9;</code>
-     * @return The bak5.
-     */
-    @java.lang.Override
-    public java.lang.String getBak5() {
-      java.lang.Object ref = bak5_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        bak5_ = s;
-        return s;
-      }
-    }
-    /**
-     * <code>string bak5 = 9;</code>
-     * @return The bytes for bak5.
-     */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getBak5Bytes() {
-      java.lang.Object ref = bak5_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        bak5_ = b;
+                (String) ref);
+        clientAddress_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -582,7 +552,7 @@ public final class DataFrameEntity {
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
+    @Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -592,7 +562,7 @@ public final class DataFrameEntity {
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (code_ != 0) {
@@ -604,28 +574,28 @@ public final class DataFrameEntity {
       if (!data_.isEmpty()) {
         output.writeBytes(3, data_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(remoteChannelId_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, remoteChannelId_);
+      if (requestNtType_ != 0) {
+        output.writeInt32(4, requestNtType_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak1_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, bak1_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tcpRemoteChannelId_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tcpRemoteChannelId_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak2_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, bak2_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(udpRemoteIp_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, udpRemoteIp_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak3_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, bak3_);
+      if (udpRemotePort_ != 0) {
+        output.writeInt32(7, udpRemotePort_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak4_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, bak4_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientUid_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, clientUid_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak5_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, bak5_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientAddress_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, clientAddress_);
       }
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
+    @Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -642,38 +612,40 @@ public final class DataFrameEntity {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, data_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(remoteChannelId_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, remoteChannelId_);
+      if (requestNtType_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, requestNtType_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak1_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, bak1_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(tcpRemoteChannelId_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tcpRemoteChannelId_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak2_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, bak2_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(udpRemoteIp_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, udpRemoteIp_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak3_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, bak3_);
+      if (udpRemotePort_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, udpRemotePort_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak4_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, bak4_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientUid_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, clientUid_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(bak5_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, bak5_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientAddress_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, clientAddress_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame)) {
+      if (!(obj instanceof DataFrame)) {
         return super.equals(obj);
       }
-      xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame other = (xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame) obj;
+      DataFrame other = (DataFrame) obj;
 
       if (getCode()
           != other.getCode()) return false;
@@ -681,23 +653,23 @@ public final class DataFrameEntity {
           .equals(other.getMessage())) return false;
       if (!getData()
           .equals(other.getData())) return false;
-      if (!getRemoteChannelId()
-          .equals(other.getRemoteChannelId())) return false;
-      if (!getBak1()
-          .equals(other.getBak1())) return false;
-      if (!getBak2()
-          .equals(other.getBak2())) return false;
-      if (!getBak3()
-          .equals(other.getBak3())) return false;
-      if (!getBak4()
-          .equals(other.getBak4())) return false;
-      if (!getBak5()
-          .equals(other.getBak5())) return false;
+      if (getRequestNtType()
+          != other.getRequestNtType()) return false;
+      if (!getTcpRemoteChannelId()
+          .equals(other.getTcpRemoteChannelId())) return false;
+      if (!getUdpRemoteIp()
+          .equals(other.getUdpRemoteIp())) return false;
+      if (getUdpRemotePort()
+          != other.getUdpRemotePort()) return false;
+      if (!getClientUid()
+          .equals(other.getClientUid())) return false;
+      if (!getClientAddress()
+          .equals(other.getClientAddress())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
 
-    @java.lang.Override
+    @Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -710,86 +682,86 @@ public final class DataFrameEntity {
       hash = (53 * hash) + getMessage().hashCode();
       hash = (37 * hash) + DATA_FIELD_NUMBER;
       hash = (53 * hash) + getData().hashCode();
-      hash = (37 * hash) + REMOTECHANNELID_FIELD_NUMBER;
-      hash = (53 * hash) + getRemoteChannelId().hashCode();
-      hash = (37 * hash) + BAK1_FIELD_NUMBER;
-      hash = (53 * hash) + getBak1().hashCode();
-      hash = (37 * hash) + BAK2_FIELD_NUMBER;
-      hash = (53 * hash) + getBak2().hashCode();
-      hash = (37 * hash) + BAK3_FIELD_NUMBER;
-      hash = (53 * hash) + getBak3().hashCode();
-      hash = (37 * hash) + BAK4_FIELD_NUMBER;
-      hash = (53 * hash) + getBak4().hashCode();
-      hash = (37 * hash) + BAK5_FIELD_NUMBER;
-      hash = (53 * hash) + getBak5().hashCode();
+      hash = (37 * hash) + REQUESTNTTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + getRequestNtType();
+      hash = (37 * hash) + TCPREMOTECHANNELID_FIELD_NUMBER;
+      hash = (53 * hash) + getTcpRemoteChannelId().hashCode();
+      hash = (37 * hash) + UDPREMOTEIP_FIELD_NUMBER;
+      hash = (53 * hash) + getUdpRemoteIp().hashCode();
+      hash = (37 * hash) + UDPREMOTEPORT_FIELD_NUMBER;
+      hash = (53 * hash) + getUdpRemotePort();
+      hash = (37 * hash) + CLIENTUID_FIELD_NUMBER;
+      hash = (53 * hash) + getClientUid().hashCode();
+      hash = (37 * hash) + CLIENTADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getClientAddress().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(byte[] data)
+    public static DataFrame parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(java.io.InputStream input)
+    public static DataFrame parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseDelimitedFrom(java.io.InputStream input)
+    public static DataFrame parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseDelimitedFrom(
+    public static DataFrame parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parseFrom(
+    public static DataFrame parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -797,23 +769,23 @@ public final class DataFrameEntity {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
+    @Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame prototype) {
+    public static Builder newBuilder(DataFrame prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
+    @Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
     }
 
-    @java.lang.Override
+    @Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -823,18 +795,18 @@ public final class DataFrameEntity {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:xyz.chener.ext.napt.server.entity.DataFrame)
-        xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrameOrBuilder {
+        DataFrameOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return xyz.chener.ext.napt.server.entity.DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
+        return DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
       }
 
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      @Override
+      protected FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return xyz.chener.ext.napt.server.entity.DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_fieldAccessorTable
+        return DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.class, xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.Builder.class);
+                DataFrame.class, Builder.class);
       }
 
       // Construct using xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.newBuilder()
@@ -843,7 +815,7 @@ public final class DataFrameEntity {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -852,7 +824,7 @@ public final class DataFrameEntity {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
+      @Override
       public Builder clear() {
         super.clear();
         code_ = 0;
@@ -861,101 +833,101 @@ public final class DataFrameEntity {
 
         data_ = com.google.protobuf.ByteString.EMPTY;
 
-        remoteChannelId_ = "";
+        requestNtType_ = 0;
 
-        bak1_ = "";
+        tcpRemoteChannelId_ = "";
 
-        bak2_ = "";
+        udpRemoteIp_ = "";
 
-        bak3_ = "";
+        udpRemotePort_ = 0;
 
-        bak4_ = "";
+        clientUid_ = "";
 
-        bak5_ = "";
+        clientAddress_ = "";
 
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return xyz.chener.ext.napt.server.entity.DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
+        return DataFrameEntity.internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor;
       }
 
-      @java.lang.Override
-      public xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame getDefaultInstanceForType() {
-        return xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.getDefaultInstance();
+      @Override
+      public DataFrame getDefaultInstanceForType() {
+        return DataFrame.getDefaultInstance();
       }
 
-      @java.lang.Override
-      public xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame build() {
-        xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame result = buildPartial();
+      @Override
+      public DataFrame build() {
+        DataFrame result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      @java.lang.Override
-      public xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame buildPartial() {
-        xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame result = new xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame(this);
+      @Override
+      public DataFrame buildPartial() {
+        DataFrame result = new DataFrame(this);
         result.code_ = code_;
         result.message_ = message_;
         result.data_ = data_;
-        result.remoteChannelId_ = remoteChannelId_;
-        result.bak1_ = bak1_;
-        result.bak2_ = bak2_;
-        result.bak3_ = bak3_;
-        result.bak4_ = bak4_;
-        result.bak5_ = bak5_;
+        result.requestNtType_ = requestNtType_;
+        result.tcpRemoteChannelId_ = tcpRemoteChannelId_;
+        result.udpRemoteIp_ = udpRemoteIp_;
+        result.udpRemotePort_ = udpRemotePort_;
+        result.clientUid_ = clientUid_;
+        result.clientAddress_ = clientAddress_;
         onBuilt();
         return result;
       }
 
-      @java.lang.Override
+      @Override
       public Builder clone() {
         return super.clone();
       }
-      @java.lang.Override
+      @Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          Object value) {
         return super.setField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-      @java.lang.Override
+      @Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-      @java.lang.Override
+      @Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+          int index, Object value) {
         return super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
+      @Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          Object value) {
         return super.addRepeatedField(field, value);
       }
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame) {
-          return mergeFrom((xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame)other);
+        if (other instanceof DataFrame) {
+          return mergeFrom((DataFrame)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame other) {
-        if (other == xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame.getDefaultInstance()) return this;
+      public Builder mergeFrom(DataFrame other) {
+        if (other == DataFrame.getDefaultInstance()) return this;
         if (other.getCode() != 0) {
           setCode(other.getCode());
         }
@@ -966,28 +938,26 @@ public final class DataFrameEntity {
         if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
           setData(other.getData());
         }
-        if (!other.getRemoteChannelId().isEmpty()) {
-          remoteChannelId_ = other.remoteChannelId_;
+        if (other.getRequestNtType() != 0) {
+          setRequestNtType(other.getRequestNtType());
+        }
+        if (!other.getTcpRemoteChannelId().isEmpty()) {
+          tcpRemoteChannelId_ = other.tcpRemoteChannelId_;
           onChanged();
         }
-        if (!other.getBak1().isEmpty()) {
-          bak1_ = other.bak1_;
+        if (!other.getUdpRemoteIp().isEmpty()) {
+          udpRemoteIp_ = other.udpRemoteIp_;
           onChanged();
         }
-        if (!other.getBak2().isEmpty()) {
-          bak2_ = other.bak2_;
+        if (other.getUdpRemotePort() != 0) {
+          setUdpRemotePort(other.getUdpRemotePort());
+        }
+        if (!other.getClientUid().isEmpty()) {
+          clientUid_ = other.clientUid_;
           onChanged();
         }
-        if (!other.getBak3().isEmpty()) {
-          bak3_ = other.bak3_;
-          onChanged();
-        }
-        if (!other.getBak4().isEmpty()) {
-          bak4_ = other.bak4_;
-          onChanged();
-        }
-        if (!other.getBak5().isEmpty()) {
-          bak5_ = other.bak5_;
+        if (!other.getClientAddress().isEmpty()) {
+          clientAddress_ = other.clientAddress_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -995,21 +965,21 @@ public final class DataFrameEntity {
         return this;
       }
 
-      @java.lang.Override
+      @Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
+      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame parsedMessage = null;
+        DataFrame parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame) e.getUnfinishedMessage();
+          parsedMessage = (DataFrame) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1024,7 +994,7 @@ public final class DataFrameEntity {
        * <code>int32 code = 1;</code>
        * @return The code.
        */
-      @java.lang.Override
+      @Override
       public int getCode() {
         return code_;
       }
@@ -1050,21 +1020,21 @@ public final class DataFrameEntity {
         return this;
       }
 
-      private java.lang.Object message_ = "";
+      private Object message_ = "";
       /**
        * <code>string message = 2;</code>
        * @return The message.
        */
-      public java.lang.String getMessage() {
-        java.lang.Object ref = message_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getMessage() {
+        Object ref = message_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
+          String s = bs.toStringUtf8();
           message_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
@@ -1073,11 +1043,11 @@ public final class DataFrameEntity {
        */
       public com.google.protobuf.ByteString
           getMessageBytes() {
-        java.lang.Object ref = message_;
+        Object ref = message_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+                  (String) ref);
           message_ = b;
           return b;
         } else {
@@ -1090,7 +1060,7 @@ public final class DataFrameEntity {
        * @return This builder for chaining.
        */
       public Builder setMessage(
-          java.lang.String value) {
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1135,7 +1105,7 @@ public final class DataFrameEntity {
        * <code>bytes data = 3;</code>
        * @return The data.
        */
-      @java.lang.Override
+      @Override
       public com.google.protobuf.ByteString getData() {
         return data_;
       }
@@ -1172,139 +1142,86 @@ public final class DataFrameEntity {
         return this;
       }
 
-      private java.lang.Object remoteChannelId_ = "";
+      private int requestNtType_ ;
       /**
        * <pre>
-       *  用于server portstart 和 remote  映射
+       * 1TCP  2UDP
        * </pre>
        *
-       * <code>string remoteChannelId = 4;</code>
-       * @return The remoteChannelId.
+       * <code>int32 requestNtType = 4;</code>
+       * @return The requestNtType.
        */
-      public java.lang.String getRemoteChannelId() {
-        java.lang.Object ref = remoteChannelId_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          remoteChannelId_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      @Override
+      public int getRequestNtType() {
+        return requestNtType_;
       }
       /**
        * <pre>
-       *  用于server portstart 和 remote  映射
+       * 1TCP  2UDP
        * </pre>
        *
-       * <code>string remoteChannelId = 4;</code>
-       * @return The bytes for remoteChannelId.
-       */
-      public com.google.protobuf.ByteString
-          getRemoteChannelIdBytes() {
-        java.lang.Object ref = remoteChannelId_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          remoteChannelId_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <pre>
-       *  用于server portstart 和 remote  映射
-       * </pre>
-       *
-       * <code>string remoteChannelId = 4;</code>
-       * @param value The remoteChannelId to set.
+       * <code>int32 requestNtType = 4;</code>
+       * @param value The requestNtType to set.
        * @return This builder for chaining.
        */
-      public Builder setRemoteChannelId(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        remoteChannelId_ = value;
+      public Builder setRequestNtType(int value) {
+        
+        requestNtType_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *  用于server portstart 和 remote  映射
+       * 1TCP  2UDP
        * </pre>
        *
-       * <code>string remoteChannelId = 4;</code>
+       * <code>int32 requestNtType = 4;</code>
        * @return This builder for chaining.
        */
-      public Builder clearRemoteChannelId() {
+      public Builder clearRequestNtType() {
         
-        remoteChannelId_ = getDefaultInstance().getRemoteChannelId();
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       *  用于server portstart 和 remote  映射
-       * </pre>
-       *
-       * <code>string remoteChannelId = 4;</code>
-       * @param value The bytes for remoteChannelId to set.
-       * @return This builder for chaining.
-       */
-      public Builder setRemoteChannelIdBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        remoteChannelId_ = value;
+        requestNtType_ = 0;
         onChanged();
         return this;
       }
 
-      private java.lang.Object bak1_ = "";
+      private Object tcpRemoteChannelId_ = "";
       /**
        * <pre>
-       *  预留字段
+       *  用于tcp:server portstart 和 remote  映射
        * </pre>
        *
-       * <code>string bak1 = 5;</code>
-       * @return The bak1.
+       * <code>string tcpRemoteChannelId = 5;</code>
+       * @return The tcpRemoteChannelId.
        */
-      public java.lang.String getBak1() {
-        java.lang.Object ref = bak1_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getTcpRemoteChannelId() {
+        Object ref = tcpRemoteChannelId_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          bak1_ = s;
+          String s = bs.toStringUtf8();
+          tcpRemoteChannelId_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
        * <pre>
-       *  预留字段
+       *  用于tcp:server portstart 和 remote  映射
        * </pre>
        *
-       * <code>string bak1 = 5;</code>
-       * @return The bytes for bak1.
+       * <code>string tcpRemoteChannelId = 5;</code>
+       * @return The bytes for tcpRemoteChannelId.
        */
       public com.google.protobuf.ByteString
-          getBak1Bytes() {
-        java.lang.Object ref = bak1_;
+          getTcpRemoteChannelIdBytes() {
+        Object ref = tcpRemoteChannelId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          bak1_ = b;
+                  (String) ref);
+          tcpRemoteChannelId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
@@ -1312,368 +1229,383 @@ public final class DataFrameEntity {
       }
       /**
        * <pre>
-       *  预留字段
+       *  用于tcp:server portstart 和 remote  映射
        * </pre>
        *
-       * <code>string bak1 = 5;</code>
-       * @param value The bak1 to set.
+       * <code>string tcpRemoteChannelId = 5;</code>
+       * @param value The tcpRemoteChannelId to set.
        * @return This builder for chaining.
        */
-      public Builder setBak1(
-          java.lang.String value) {
+      public Builder setTcpRemoteChannelId(
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        bak1_ = value;
+        tcpRemoteChannelId_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *  预留字段
+       *  用于tcp:server portstart 和 remote  映射
        * </pre>
        *
-       * <code>string bak1 = 5;</code>
+       * <code>string tcpRemoteChannelId = 5;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBak1() {
+      public Builder clearTcpRemoteChannelId() {
         
-        bak1_ = getDefaultInstance().getBak1();
+        tcpRemoteChannelId_ = getDefaultInstance().getTcpRemoteChannelId();
         onChanged();
         return this;
       }
       /**
        * <pre>
-       *  预留字段
+       *  用于tcp:server portstart 和 remote  映射
        * </pre>
        *
-       * <code>string bak1 = 5;</code>
-       * @param value The bytes for bak1 to set.
+       * <code>string tcpRemoteChannelId = 5;</code>
+       * @param value The bytes for tcpRemoteChannelId to set.
        * @return This builder for chaining.
        */
-      public Builder setBak1Bytes(
+      public Builder setTcpRemoteChannelIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        bak1_ = value;
+        tcpRemoteChannelId_ = value;
         onChanged();
         return this;
       }
 
-      private java.lang.Object bak2_ = "";
+      private Object udpRemoteIp_ = "";
       /**
-       * <code>string bak2 = 6;</code>
-       * @return The bak2.
+       * <pre>
+       * 用于 udp： 服务端接受的地址和远程后端地址做映射
+       * </pre>
+       *
+       * <code>string udpRemoteIp = 6;</code>
+       * @return The udpRemoteIp.
        */
-      public java.lang.String getBak2() {
-        java.lang.Object ref = bak2_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getUdpRemoteIp() {
+        Object ref = udpRemoteIp_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          bak2_ = s;
+          String s = bs.toStringUtf8();
+          udpRemoteIp_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
-       * <code>string bak2 = 6;</code>
-       * @return The bytes for bak2.
+       * <pre>
+       * 用于 udp： 服务端接受的地址和远程后端地址做映射
+       * </pre>
+       *
+       * <code>string udpRemoteIp = 6;</code>
+       * @return The bytes for udpRemoteIp.
        */
       public com.google.protobuf.ByteString
-          getBak2Bytes() {
-        java.lang.Object ref = bak2_;
+          getUdpRemoteIpBytes() {
+        Object ref = udpRemoteIp_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          bak2_ = b;
+                  (String) ref);
+          udpRemoteIp_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string bak2 = 6;</code>
-       * @param value The bak2 to set.
+       * <pre>
+       * 用于 udp： 服务端接受的地址和远程后端地址做映射
+       * </pre>
+       *
+       * <code>string udpRemoteIp = 6;</code>
+       * @param value The udpRemoteIp to set.
        * @return This builder for chaining.
        */
-      public Builder setBak2(
-          java.lang.String value) {
+      public Builder setUdpRemoteIp(
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        bak2_ = value;
+        udpRemoteIp_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string bak2 = 6;</code>
+       * <pre>
+       * 用于 udp： 服务端接受的地址和远程后端地址做映射
+       * </pre>
+       *
+       * <code>string udpRemoteIp = 6;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBak2() {
+      public Builder clearUdpRemoteIp() {
         
-        bak2_ = getDefaultInstance().getBak2();
+        udpRemoteIp_ = getDefaultInstance().getUdpRemoteIp();
         onChanged();
         return this;
       }
       /**
-       * <code>string bak2 = 6;</code>
-       * @param value The bytes for bak2 to set.
+       * <pre>
+       * 用于 udp： 服务端接受的地址和远程后端地址做映射
+       * </pre>
+       *
+       * <code>string udpRemoteIp = 6;</code>
+       * @param value The bytes for udpRemoteIp to set.
        * @return This builder for chaining.
        */
-      public Builder setBak2Bytes(
+      public Builder setUdpRemoteIpBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        bak2_ = value;
+        udpRemoteIp_ = value;
         onChanged();
         return this;
       }
 
-      private java.lang.Object bak3_ = "";
+      private int udpRemotePort_ ;
       /**
-       * <code>string bak3 = 7;</code>
-       * @return The bak3.
+       * <code>int32 udpRemotePort = 7;</code>
+       * @return The udpRemotePort.
        */
-      public java.lang.String getBak3() {
-        java.lang.Object ref = bak3_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          bak3_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      @Override
+      public int getUdpRemotePort() {
+        return udpRemotePort_;
       }
       /**
-       * <code>string bak3 = 7;</code>
-       * @return The bytes for bak3.
-       */
-      public com.google.protobuf.ByteString
-          getBak3Bytes() {
-        java.lang.Object ref = bak3_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          bak3_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string bak3 = 7;</code>
-       * @param value The bak3 to set.
+       * <code>int32 udpRemotePort = 7;</code>
+       * @param value The udpRemotePort to set.
        * @return This builder for chaining.
        */
-      public Builder setBak3(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        bak3_ = value;
+      public Builder setUdpRemotePort(int value) {
+        
+        udpRemotePort_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string bak3 = 7;</code>
+       * <code>int32 udpRemotePort = 7;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBak3() {
+      public Builder clearUdpRemotePort() {
         
-        bak3_ = getDefaultInstance().getBak3();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string bak3 = 7;</code>
-       * @param value The bytes for bak3 to set.
-       * @return This builder for chaining.
-       */
-      public Builder setBak3Bytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        bak3_ = value;
+        udpRemotePort_ = 0;
         onChanged();
         return this;
       }
 
-      private java.lang.Object bak4_ = "";
+      private Object clientUid_ = "";
       /**
-       * <code>string bak4 = 8;</code>
-       * @return The bak4.
+       * <pre>
+       * 客户端UID
+       * </pre>
+       *
+       * <code>string clientUid = 8;</code>
+       * @return The clientUid.
        */
-      public java.lang.String getBak4() {
-        java.lang.Object ref = bak4_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getClientUid() {
+        Object ref = clientUid_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          bak4_ = s;
+          String s = bs.toStringUtf8();
+          clientUid_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
-       * <code>string bak4 = 8;</code>
-       * @return The bytes for bak4.
+       * <pre>
+       * 客户端UID
+       * </pre>
+       *
+       * <code>string clientUid = 8;</code>
+       * @return The bytes for clientUid.
        */
       public com.google.protobuf.ByteString
-          getBak4Bytes() {
-        java.lang.Object ref = bak4_;
+          getClientUidBytes() {
+        Object ref = clientUid_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          bak4_ = b;
+                  (String) ref);
+          clientUid_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string bak4 = 8;</code>
-       * @param value The bak4 to set.
+       * <pre>
+       * 客户端UID
+       * </pre>
+       *
+       * <code>string clientUid = 8;</code>
+       * @param value The clientUid to set.
        * @return This builder for chaining.
        */
-      public Builder setBak4(
-          java.lang.String value) {
+      public Builder setClientUid(
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        bak4_ = value;
+        clientUid_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string bak4 = 8;</code>
+       * <pre>
+       * 客户端UID
+       * </pre>
+       *
+       * <code>string clientUid = 8;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBak4() {
+      public Builder clearClientUid() {
         
-        bak4_ = getDefaultInstance().getBak4();
+        clientUid_ = getDefaultInstance().getClientUid();
         onChanged();
         return this;
       }
       /**
-       * <code>string bak4 = 8;</code>
-       * @param value The bytes for bak4 to set.
+       * <pre>
+       * 客户端UID
+       * </pre>
+       *
+       * <code>string clientUid = 8;</code>
+       * @param value The bytes for clientUid to set.
        * @return This builder for chaining.
        */
-      public Builder setBak4Bytes(
+      public Builder setClientUidBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        bak4_ = value;
+        clientUid_ = value;
         onChanged();
         return this;
       }
 
-      private java.lang.Object bak5_ = "";
+      private Object clientAddress_ = "";
       /**
-       * <code>string bak5 = 9;</code>
-       * @return The bak5.
+       * <pre>
+       * ClientAddress
+       * </pre>
+       *
+       * <code>string clientAddress = 9;</code>
+       * @return The clientAddress.
        */
-      public java.lang.String getBak5() {
-        java.lang.Object ref = bak5_;
-        if (!(ref instanceof java.lang.String)) {
+      public String getClientAddress() {
+        Object ref = clientAddress_;
+        if (!(ref instanceof String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          bak5_ = s;
+          String s = bs.toStringUtf8();
+          clientAddress_ = s;
           return s;
         } else {
-          return (java.lang.String) ref;
+          return (String) ref;
         }
       }
       /**
-       * <code>string bak5 = 9;</code>
-       * @return The bytes for bak5.
+       * <pre>
+       * ClientAddress
+       * </pre>
+       *
+       * <code>string clientAddress = 9;</code>
+       * @return The bytes for clientAddress.
        */
       public com.google.protobuf.ByteString
-          getBak5Bytes() {
-        java.lang.Object ref = bak5_;
+          getClientAddressBytes() {
+        Object ref = clientAddress_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          bak5_ = b;
+                  (String) ref);
+          clientAddress_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string bak5 = 9;</code>
-       * @param value The bak5 to set.
+       * <pre>
+       * ClientAddress
+       * </pre>
+       *
+       * <code>string clientAddress = 9;</code>
+       * @param value The clientAddress to set.
        * @return This builder for chaining.
        */
-      public Builder setBak5(
-          java.lang.String value) {
+      public Builder setClientAddress(
+          String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        bak5_ = value;
+        clientAddress_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string bak5 = 9;</code>
+       * <pre>
+       * ClientAddress
+       * </pre>
+       *
+       * <code>string clientAddress = 9;</code>
        * @return This builder for chaining.
        */
-      public Builder clearBak5() {
+      public Builder clearClientAddress() {
         
-        bak5_ = getDefaultInstance().getBak5();
+        clientAddress_ = getDefaultInstance().getClientAddress();
         onChanged();
         return this;
       }
       /**
-       * <code>string bak5 = 9;</code>
-       * @param value The bytes for bak5 to set.
+       * <pre>
+       * ClientAddress
+       * </pre>
+       *
+       * <code>string clientAddress = 9;</code>
+       * @param value The bytes for clientAddress to set.
        * @return This builder for chaining.
        */
-      public Builder setBak5Bytes(
+      public Builder setClientAddressBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        bak5_ = value;
+        clientAddress_ = value;
         onChanged();
         return this;
       }
-      @java.lang.Override
+      @Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
-      @java.lang.Override
+      @Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1684,18 +1616,18 @@ public final class DataFrameEntity {
     }
 
     // @@protoc_insertion_point(class_scope:xyz.chener.ext.napt.server.entity.DataFrame)
-    private static final xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame DEFAULT_INSTANCE;
+    private static final DataFrame DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame();
+      DEFAULT_INSTANCE = new DataFrame();
     }
 
-    public static xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame getDefaultInstance() {
+    public static DataFrame getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<DataFrame>
         PARSER = new com.google.protobuf.AbstractParser<DataFrame>() {
-      @java.lang.Override
+      @Override
       public DataFrame parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1708,13 +1640,13 @@ public final class DataFrameEntity {
       return PARSER;
     }
 
-    @java.lang.Override
+    @Override
     public com.google.protobuf.Parser<DataFrame> getParserForType() {
       return PARSER;
     }
 
-    @java.lang.Override
-    public xyz.chener.ext.napt.server.entity.DataFrameEntity.DataFrame getDefaultInstanceForType() {
+    @Override
+    public DataFrame getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1733,14 +1665,15 @@ public final class DataFrameEntity {
   private static  com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    java.lang.String[] descriptorData = {
+    String[] descriptorData = {
       "\n\017DataFrame.proto\022!xyz.chener.ext.napt.s" +
-      "erver.entity\"\227\001\n\tDataFrame\022\014\n\004code\030\001 \001(\005" +
-      "\022\017\n\007message\030\002 \001(\t\022\014\n\004data\030\003 \001(\014\022\027\n\017remot" +
-      "eChannelId\030\004 \001(\t\022\014\n\004bak1\030\005 \001(\t\022\014\n\004bak2\030\006" +
-      " \001(\t\022\014\n\004bak3\030\007 \001(\t\022\014\n\004bak4\030\010 \001(\t\022\014\n\004bak5" +
-      "\030\t \001(\tB4\n!xyz.chener.ext.napt.server.ent" +
-      "ityB\017DataFrameEntityb\006proto3"
+      "erver.entity\"\301\001\n\tDataFrame\022\014\n\004code\030\001 \001(\005" +
+      "\022\017\n\007message\030\002 \001(\t\022\014\n\004data\030\003 \001(\014\022\025\n\rreque" +
+      "stNtType\030\004 \001(\005\022\032\n\022tcpRemoteChannelId\030\005 \001" +
+      "(\t\022\023\n\013udpRemoteIp\030\006 \001(\t\022\025\n\rudpRemotePort" +
+      "\030\007 \001(\005\022\021\n\tclientUid\030\010 \001(\t\022\025\n\rclientAddre" +
+      "ss\030\t \001(\tB4\n!xyz.chener.ext.napt.server.e" +
+      "ntityB\017DataFrameEntityb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1751,7 +1684,7 @@ public final class DataFrameEntity {
     internal_static_xyz_chener_ext_napt_server_entity_DataFrame_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_xyz_chener_ext_napt_server_entity_DataFrame_descriptor,
-        new java.lang.String[] { "Code", "Message", "Data", "RemoteChannelId", "Bak1", "Bak2", "Bak3", "Bak4", "Bak5", });
+        new String[] { "Code", "Message", "Data", "RequestNtType", "TcpRemoteChannelId", "UdpRemoteIp", "UdpRemotePort", "ClientUid", "ClientAddress", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

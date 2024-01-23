@@ -11,6 +11,7 @@ import io.javalin.http.ContentType;
 import io.javalin.security.RouteRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
+import xyz.chener.ext.napt.server.core.requestNt.RequestNtTcp;
 import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
@@ -172,9 +173,11 @@ public class HttpServer {
                             .append(dt.getSpeedLimitHandler() != null ? dt.getSpeedLimitHandler().trafficCounter().currentReadBytes() : 0)
                             .append("\n");
                     sb.append("        Port Connect:\n");
-                    dt.getMap().forEach((k1,v1)->{
-                        sb.append("        ").append(k1).append(" -> ").append(v1.channel().remoteAddress()).append("\n");
-                    });
+                    if (dt instanceof RequestNtTcp dtt){
+                        dtt.getMap().forEach((k1,v1)->{
+                            sb.append("        ").append(k1).append(" -> ").append(v1.channel().remoteAddress()).append("\n");
+                        });
+                    }
                 });
             });
             sb.append("\n\n");

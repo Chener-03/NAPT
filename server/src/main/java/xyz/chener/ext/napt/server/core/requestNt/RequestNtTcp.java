@@ -3,7 +3,6 @@ package xyz.chener.ext.napt.server.core.requestNt;
 import com.google.protobuf.ByteString;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
@@ -17,80 +16,39 @@ import xyz.chener.ext.napt.server.core.Continer;
 import xyz.chener.ext.napt.server.core.TrafficCounter;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
+import xyz.chener.ext.napt.server.entity.RequestNtType;
+import xyz.chener.ext.napt.server.utils.Utils;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
  * 对应每个端口的转发服务
  */
 @Slf4j
-public class RequestNtTcp {
+public class RequestNtTcp extends RequestNt {
 
-    private final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
-    private final NioEventLoopGroup workGroup = new NioEventLoopGroup(5);
-
-    @Getter
-    private final String clientUid;
-
-    @Getter
-    private final Integer port;
-
-    @Getter
-    private final String clientAddr;
-
-    private final Thread thread;
-
-    private Channel channel = null;
-
-    private volatile boolean isStart = true;
-
-    private final Lock lock = new ReentrantLock();
 
     // 存放当前端口连接通道   channelId -> channel
     @Getter
-    private final ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<String, ChannelHandlerContext> map = new ConcurrentHashMap<>();
 
-    // 进出流量限制
-    private final int speedLimit;
 
-    @Getter
-    private GlobalTrafficShapingHandler speedLimitHandler = null;
-
-    public RequestNtTcp(String clientUid, Integer port, String clientAddr, int speedLimit) {
+    public RequestNtTcp(RequestNtType type, String clientUid, Integer port, String clientAddr, int speedLimit) {
+        super(type, clientUid, port, clientAddr);
         if (speedLimit == -1){
             this.speedLimit = Integer.MAX_VALUE;
         }else {
             this.speedLimit = speedLimit;
         }
-        this.clientUid = clientUid;
-        this.port = port;
-        this.clientAddr = clientAddr;
         isStart = true;
-        thread = Thread.ofVirtual().name("RequestNtTcp-"+clientUid+"-"+port).start(this::run);
+        this.thread = Thread.ofVirtual().name("NtTcp-" + port).start(this::run);
     }
 
-    public void stop()
-    {
-        lock.lock();
-        try {
-            isStart = false;
-            if (Objects.nonNull(channel))
-                channel.close();
-            thread.interrupt();
-            bossGroup.shutdownGracefully();
-            workGroup.shutdownGracefully();
-            thread.join(2000);
-        }catch (Exception ignored){}
-        finally {
-            lock.unlock();
-        }
-    }
+
 
     public void closeOneChannel(String channelId){
         ChannelHandlerContext channelHandlerContext = map.get(channelId);
@@ -111,18 +69,18 @@ public class RequestNtTcp {
         {
             try {
                 ServerBootstrap bootstrap = new ServerBootstrap()
-                        .group(bossGroup,workGroup)
+                        .group(bossGroup, workGroup)
                         .channel(NioServerSocketChannel.class)
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
-                                speedLimitHandler = new GlobalTrafficShapingHandler(workGroup,speedLimit, speedLimit);
+                                speedLimitHandler = new GlobalTrafficShapingHandler(socketChannel.eventLoop(),speedLimit, speedLimit);
 
                                 ChannelPipeline p = socketChannel.pipeline();
                                 p.addLast(speedLimitHandler);
                                 p.addLast(new ByteArrayEncoder());
                                 p.addLast(new ByteArrayDecoder());
-                                p.addLast(new OnePortForwardHandle(clientUid,clientAddr,map,port));
+                                p.addLast(new TcpSinglePortForwardHandle(clientUid,clientAddr,map,port,type));
                             }
                         })
                         .childOption(ChannelOption.TCP_NODELAY, true)
@@ -146,7 +104,7 @@ public class RequestNtTcp {
                         DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
                                 .setCode(DataFrameCode.REMOTE_PORT_START_ERROR)
                                 .setMessage(String.format("服务器绑定端口异常,即将重试,clientUID:%s,port:%s,exception:%s",clientUid,port,exception.getMessage()))
-                                .setRemoteChannelId(channelId).build();
+                                .setTcpRemoteChannelId(channelId).build();
                         context.channel().writeAndFlush(dataFrame);
                     }
                     try {
@@ -161,20 +119,25 @@ public class RequestNtTcp {
     }
 
 
-    private static class OnePortForwardHandle extends ChannelInboundHandlerAdapter{
 
+
+
+    @Slf4j
+    private static class TcpSinglePortForwardHandle extends ChannelInboundHandlerAdapter {
         private final String clientUid;
         private final String clientAddr;
         private final Map<String, ChannelHandlerContext> map;
-
         private final int port;
+        private final RequestNtType requestNtType;
 
-        private OnePortForwardHandle(String clientUid, String clientAddr, Map<String, ChannelHandlerContext> map,int port) {
+        private TcpSinglePortForwardHandle(String clientUid, String clientAddr, Map<String, ChannelHandlerContext> map, int port, RequestNtType requestNtType) {
             this.clientUid = clientUid;
             this.clientAddr = clientAddr;
             this.map = map;
             this.port = port;
+            this.requestNtType = requestNtType;
         }
+
 
         private void doClose(ChannelHandlerContext ctx) {
             map.remove(ctx.channel().id().asLongText());
@@ -184,7 +147,7 @@ public class RequestNtTcp {
                 DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
                         .setCode(DataFrameCode.REMOTE_CHANNEL_CLOSE)
                         .setMessage(String.valueOf(clientAddr))
-                        .setRemoteChannelId(ctx.channel().id().asLongText()).build();
+                        .setTcpRemoteChannelId(ctx.channel().id().asLongText()).build();
                 context.channel().writeAndFlush(dataFrame);
             }
         }
@@ -205,14 +168,17 @@ public class RequestNtTcp {
                     }
 
                     DataFrameEntity.DataFrame dataFrame = DataFrameEntity.DataFrame.newBuilder()
-                            .setCode(DataFrameCode.REMOTE_CHANNEL_ACCEPT)
+                            .setCode(DataFrameCode.REMOTE_CHANNEL_ACCEPT_TCP)
                             .setMessage(String.valueOf(clientAddr))
                             .setData(ByteString.copyFrom(Optional.ofNullable(bts).orElse(new byte[0])))
-                            .setRemoteChannelId(channelIdLongText).build();
+                            .setTcpRemoteChannelId(channelIdLongText)
+                            .setRequestNtType(requestNtType.getCode())
+                            .build();
                     context.channel().writeAndFlush(dataFrame);
                 }
             }catch (Exception ignored){}
         }
+
 
         @Override
         public void channelActive(@NotNull ChannelHandlerContext ctx) throws Exception {
@@ -223,7 +189,10 @@ public class RequestNtTcp {
 
         @Override
         public void channelInactive(@NotNull ChannelHandlerContext ctx) throws Exception {
-            doClose(ctx);
+            Utils.runIgnoreException(()->{
+                doClose(ctx);
+                ctx.channel().close();
+            });
         }
 
         @Override
@@ -236,11 +205,12 @@ public class RequestNtTcp {
 
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-            doClose(ctx);
-            log.error("OnePortForwardHandle exceptionCaught:{}",cause.getMessage());
-            ctx.channel().close();
+            Utils.runIgnoreException(()->{
+                doClose(ctx);
+                log.error("OnePortForwardHandle exceptionCaught:{}",cause.getMessage());
+                ctx.channel().close();
+            });
         }
     }
-
 
 }

@@ -9,10 +9,12 @@ package xyz.chener.ext.napt.server.core;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import io.netty.channel.ChannelHandlerContext;
+import xyz.chener.ext.napt.server.core.requestNt.RequestNt;
 import xyz.chener.ext.napt.server.core.requestNt.RequestNtTcp;
 import xyz.chener.ext.napt.server.entity.ClientItem;
 import xyz.chener.ext.napt.server.entity.DataFrameCode;
 import xyz.chener.ext.napt.server.entity.DataFrameEntity;
+import xyz.chener.ext.napt.server.entity.RequestNtType;
 import xyz.chener.ext.napt.server.mapper.ClientItemMapper;
 
 import java.util.ArrayList;
@@ -31,32 +33,31 @@ public class ClientManager {
         if (!ConnectCache.clientChannel.containsKey(clientUid)) {
             return;
         }
-        List<RequestNtTcp> requestNtTcps = ConnectCache.portStarts.get(clientUid);
+        List<RequestNt> requestNts = ConnectCache.portStarts.get(clientUid);
 
         List<ClientItem> clients = new LambdaQueryChainWrapper<>(StrongStarter.getMapper(ClientItemMapper.class))
                 .eq(ClientItem::getClientUid, clientUid).list();
 
         // step1 requestNts有 clients 没有的  requestNts删除
-
-        Iterator<RequestNtTcp> it = requestNtTcps.stream().filter(requestNtTcp -> clients.stream().noneMatch(c -> c.getClientUid().equals(requestNtTcp.getClientUid())
-                && c.getServerPort().equals(requestNtTcp.getPort())
-                && c.getClientAddr().equals(requestNtTcp.getClientAddr()))).iterator();
+        Iterator<RequestNt> it = requestNts.stream().filter(requestNt -> clients.stream().noneMatch(c -> c.getClientUid().equals(requestNt.getClientUid())
+                && c.getServerPort().equals(requestNt.getPort())
+                && c.getClientAddr().equals(requestNt.getClientAddr()))).iterator();
 
         while (it.hasNext()){
-            RequestNtTcp requestNtTcp = it.next();
-            requestNtTcp.stop();
+            RequestNt requestNt = it.next();
+            requestNt.stop();
             it.remove();
         }
 
         // step2 clients有 requestNtTcps 没有的  requestNts添加
         ArrayList<ClientItem> clientSub = new ArrayList<>(clients);
-        clientSub.removeIf(ct -> requestNtTcps.stream().anyMatch(requestNtTcp -> requestNtTcp.getClientAddr().equals(ct.getClientAddr()) && requestNtTcp.getPort().equals(ct.getServerPort()) && requestNtTcp.getClientUid().equals(ct.getClientUid())));
+        clientSub.removeIf(ct -> requestNts.stream().anyMatch(requestNtTcp -> requestNtTcp.getClientAddr().equals(ct.getClientAddr()) && requestNtTcp.getPort().equals(ct.getServerPort()) && requestNtTcp.getClientUid().equals(ct.getClientUid())));
         clientSub.forEach(e->{
-            requestNtTcps.add(new RequestNtTcp(e.getClientUid(),e.getServerPort(),e.getClientAddr(), e.getSpeedLimit().intValue()));
+            requestNts.add(new RequestNtTcp(RequestNtType.TCP,e.getClientUid(),e.getServerPort(),e.getClientAddr(), e.getSpeedLimit().intValue()));
         });
 
         // step3 requestNts为空的话全部删除
-        if (requestNtTcps.isEmpty()){
+        if (requestNts.isEmpty()){
             ConnectCache.portStarts.remove(clientUid);
             String channelId = ConnectCache.clientChannel.remove(clientUid);
             ChannelHandlerContext ctx = ConnectCache.channelMap.remove(channelId);

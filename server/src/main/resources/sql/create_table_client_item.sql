@@ -3,6 +3,7 @@ CREATE TABLE client_item (
      client_uid VARCHAR(255),
      client_addr VARCHAR(255),
      server_port INT,
+     request_nt_type INT,
      flow BIGINT,
      max_flow_limit BIGINT,
      speed_limit BIGINT,

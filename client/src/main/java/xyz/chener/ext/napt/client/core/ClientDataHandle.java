@@ -59,9 +59,9 @@ public class ClientDataHandle extends ChannelInboundHandlerAdapter {
 
                 case DataFrameCode.ACCESS_SUCCESS -> log.info("授权成功,映射的地址:{}",data.getMessage());
 
-                case DataFrameCode.REMOTE_CHANNEL_ACCEPT -> {
+                case DataFrameCode.REMOTE_CHANNEL_ACCEPT_TCP -> {
                     String addr = data.getMessage();
-                    String remoteChannelId = data.getRemoteChannelId();
+                    String remoteChannelId = data.getTcpRemoteChannelId();
                     RequestClient requestClient = remoteRequestMap.get(remoteChannelId);
                     if (requestClient == null){
                         String addrWithoutProtocol = addr;
