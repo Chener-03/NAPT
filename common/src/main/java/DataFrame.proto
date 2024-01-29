@@ -1,0 +1,39 @@
+
+syntax = "proto3";
+
+
+package xyz.chener.napt.common.entity;
+
+
+option java_package = "xyz.chener.napt.common.entity";
+
+option java_outer_classname="DataFrameEntity";
+
+message DataFrame{
+
+  int32 code = 1;
+
+  string message = 2;
+
+  //  数据
+  bytes data = 3;
+
+  // 1TCP  2UDP
+  int32 requestNtType = 4;
+
+  //  用于tcp:server portstart 和 remote  映射
+  string tcpRemoteChannelId = 5;
+
+
+  // 用于 udp： 服务端接受的地址和远程后端地址做映射
+  string udpRemoteIp = 6;
+  int32 udpRemotePort = 7;
+
+  // 客户端UID
+  string clientUid = 8;
+
+  // ClientAddress
+  string clientAddress = 9;
+
+}
+
