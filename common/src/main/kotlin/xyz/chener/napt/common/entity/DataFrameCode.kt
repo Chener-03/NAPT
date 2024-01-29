@@ -23,7 +23,8 @@ enum class DataFrameCode(val code: Int,val message:String) {
     CLIENT_FLOW_LIMIT(104,"限制流量"),
     CLIENT_CLOSE_REMOTE_CHANNEL_TCP(105,"后端映射地址主动关闭remoteChannel"),
     HEART_BEAT(1001,"心跳"),
-    GET_CLIENT_CONNECTS(1002,"获取客户端连接信息")
+    GET_CLIENT_CONNECTS(1002,"获取客户端连接信息"),
+    RESTART_CLIENT_CONNECT(1003,"重置客户端的连接")
     ;
 
 

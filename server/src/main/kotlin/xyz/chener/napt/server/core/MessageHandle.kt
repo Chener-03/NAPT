@@ -137,6 +137,23 @@ open class MessageHandle {
         ctx.channel().writeAndFlush(data)
     }
 
+
+    fun onClientSyncMessage(ctx: ChannelHandlerContext, data: DataFrameEntity.DataFrame) {
+        clientManager.getClientInfoLockCache[data.message]?.let {
+            data.data.toByteArray()?.let { bts ->
+                try {
+                    it.lock.lock()
+                    it.result = String(bts)
+                    it.condition.signalAll()
+                } finally {
+                    it.lock.unlock()
+                }
+            }
+
+        }
+    }
+
+
     private fun findClientUidByClientBackendChannelId(clientBackendChannelId:String) : String?{
         clientManager.clientUidToClientChannelId.forEach { (clientUid, channelId) ->
             if (channelId == clientBackendChannelId){

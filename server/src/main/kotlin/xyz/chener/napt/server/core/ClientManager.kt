@@ -7,6 +7,7 @@ import xyz.chener.napt.common.entity.DataFrameEntity
 import xyz.chener.napt.common.entity.ProxyType
 import xyz.chener.napt.server.core.proxy.AbstractPortProxy
 import xyz.chener.napt.server.entity.ClientItem
+import xyz.chener.napt.server.http.entity.SyncLockPayload
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -26,6 +27,8 @@ open class ClientManager {
     // clientUid -> 端口代理   存储每个客户端的转发服务的服务端port列表
     val portProxys: ConcurrentHashMap<String, CopyOnWriteArrayList<AbstractPortProxy>> = ConcurrentHashMap<String, CopyOnWriteArrayList<AbstractPortProxy>>()
 
+    // 同步获取后端信息  使用的等待器  供HTTP部分使用
+    val getClientInfoLockCache = ConcurrentHashMap<String, SyncLockPayload>()
 
     /**
      * 后端客户端连接断开时执行的清理方法
@@ -104,7 +107,6 @@ open class ClientManager {
 
         portProxys[clientUid] = proxys
     }
-
 
     private fun findClientUidByClientChannelId(clientChannelId: String): String? {
         return clientUidToClientChannelId.entries.find { it.value == clientChannelId }?.key

@@ -21,6 +21,6 @@ open class ServerInit : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         println("token: $token")
-        println(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(clientItemRepository?.findAll()))
+//        println(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(clientItemRepository?.findAll()))
     }
 }

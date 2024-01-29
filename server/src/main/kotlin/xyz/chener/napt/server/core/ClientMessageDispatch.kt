@@ -35,6 +35,7 @@ open class ClientMessageDispatch(val clientManager: ClientManager,val messageHan
             if (msg.code == DataFrameCode.CLIENT_CLOSE_REMOTE_CHANNEL_TCP.code) messageHandle.onTcpClientCloseRemoteChannel(ctx, msg)
             if (msg.code == DataFrameCode.CLIENT_CHANNEL_ACCEPT_UDP.code) messageHandle.onUdpClientData(ctx, msg)
             if (msg.code == DataFrameCode.HEART_BEAT.code) messageHandle.onHeartBeatMessage(ctx, msg)
+            if (msg.code == DataFrameCode.GET_CLIENT_CONNECTS.code) messageHandle.onClientSyncMessage(ctx, msg)
 
         } else {
             ctx.channel().close()

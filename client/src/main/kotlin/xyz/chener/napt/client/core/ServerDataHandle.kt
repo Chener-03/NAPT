@@ -1,5 +1,7 @@
 package xyz.chener.napt.client.core
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.protobuf.ByteString
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import org.slf4j.Logger
@@ -92,6 +94,25 @@ class ServerDataHandle(
 
                 DataFrameCode.CLIENT_FLOW_LIMIT.code ->{
                     log.error("流量超出限制:{}", msg.getMessage())
+                }
+
+                DataFrameCode.GET_CLIENT_CONNECTS.code ->{
+                    val tcpRes = ArrayList<Map<String,String>>()
+                    val udpRes = ArrayList<Map<String,String>>()
+                    tcpRemoteRequestMap.forEach { (t, u) ->
+                        tcpRes.add(mapOf("channelId" to t,"clientHost" to u.clientHost,"clientPort" to u.clientPort.toString()))
+                    }
+                    udpRemoteRequestList.forEach {
+                        udpRes.add(mapOf("clientHost" to it.clientHost,"clientPort" to it.clientPort.toString(),"remoteHost" to it.remoteHost,"remotePort" to it.remotePort.toString()))
+                    }
+                    msg.toBuilder().setData(ByteString.copyFrom(ObjectMapper().writeValueAsBytes(mapOf("tcp" to tcpRes,"udp" to udpRes)))).build().let {
+                        ctx.channel().writeAndFlush(it)
+                    }
+                }
+
+                DataFrameCode.RESTART_CLIENT_CONNECT.code ->{
+                    log.info("服务端要求重启")
+                    ctx.channel().close()
                 }
 
             }

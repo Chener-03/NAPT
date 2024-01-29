@@ -38,7 +38,7 @@ class TcpPortProxy(proxyType: ProxyType, clientUid: String, port: Int, clientAdd
 
 
     //连接到代理端口的客户端
-    private val channelIdToContext: ConcurrentHashMap<String, ChannelHandlerContext> = ConcurrentHashMap()
+    val channelIdToContext: ConcurrentHashMap<String, ChannelHandlerContext> = ConcurrentHashMap()
 
 
     override fun run() {
@@ -166,7 +166,6 @@ class TcpPortProxy(proxyType: ProxyType, clientUid: String, port: Int, clientAdd
             }
 
             override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
-                log.error("TcpPortProxyHandler exceptionCaught: ", cause)
                 doClose(ctx)
                 ctx.channel().close()
             }

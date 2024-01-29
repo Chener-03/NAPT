@@ -25,6 +25,7 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
 
 
     implementation 'io.netty:netty-all:4.1.106.Final'
