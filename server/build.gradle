@@ -43,6 +43,12 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+
+springBoot {
+    buildInfo()
+}
+
+
 // https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html#_adding_the_plugin
 /*
 graalvmNative {

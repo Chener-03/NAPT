@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ImportRuntimeHints
+import xyz.chener.napt.common.utils.BuildInfoUtils
 import xyz.chener.napt.server.aot.AotRuntime
 import xyz.chener.napt.server.entity.ClientItem
 import xyz.chener.napt.server.repository.ClientItemRepository
@@ -18,5 +19,6 @@ open class ServerApplication
 
 
 fun main(args: Array<String>) {
+    BuildInfoUtils.printBuildInfo(ServerApplication::class.java)
     runApplication<ServerApplication>(*args)
 }
