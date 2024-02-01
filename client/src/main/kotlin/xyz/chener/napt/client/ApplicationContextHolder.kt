@@ -15,9 +15,6 @@ class ApplicationContextHolder : ApplicationContextAware {
         lateinit var applicationContext: ApplicationContext
     }
 
-    @Autowired
-    lateinit var buildProperties: BuildProperties
-
     override fun setApplicationContext(applicationContext: ApplicationContext) {
         Companion.applicationContext = applicationContext
     }

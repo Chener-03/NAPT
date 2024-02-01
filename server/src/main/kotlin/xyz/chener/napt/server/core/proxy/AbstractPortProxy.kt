@@ -2,10 +2,10 @@ package xyz.chener.napt.server.core.proxy
 
 import io.netty.channel.Channel
 import io.netty.channel.nio.NioEventLoopGroup
+import xyz.chener.napt.common.entity.ProxyType
 import xyz.chener.napt.server.ApplicationContextHolder
 import xyz.chener.napt.server.core.ClientManager
 import xyz.chener.napt.server.core.TrafficLimiter
-import xyz.chener.napt.common.entity.ProxyType
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.Volatile

@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 import xyz.chener.napt.common.entity.DataFrameCode
 import xyz.chener.napt.common.entity.DataFrameEntity
 import xyz.chener.napt.server.core.ClientManager
+import xyz.chener.napt.server.core.TrafficLimiter
 import xyz.chener.napt.server.core.proxy.TcpPortProxy
 import xyz.chener.napt.server.entity.ClientItem
 import xyz.chener.napt.server.http.entity.SyncLockPayload
 import xyz.chener.napt.server.repository.ClientItemRepository
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.jvmName
@@ -37,6 +38,9 @@ open class InfoController {
 
     @Autowired
     lateinit var clientItemRepository: ClientItemRepository
+
+    @Autowired
+    lateinit var trafficLimiter: TrafficLimiter
 
     @RequestMapping("/http/allEndpoints")
     fun allEndpoints(): List<String> {
@@ -153,6 +157,13 @@ open class InfoController {
         //save or update
         clientItemRepository.save(clientItem)
         return true
+    }
+
+
+    @RequestMapping("/http/getClientSpeed")
+    fun getClientSpeed(@RequestParam("uid") uid: String,@RequestParam("clientAddress") clientAddress: String,@RequestParam("port") port: Int) : Map<String,Any>{
+        val trafficRate = trafficLimiter.getTrafficRate(uid, clientAddress, port)
+        return mapOf("trafficRate" to trafficRate,"trafficRateStrKb" to "${trafficRate/1024}KB/s","trafficRateStrMb" to "${trafficRate/1024/1024}MB/s")
     }
 
 }

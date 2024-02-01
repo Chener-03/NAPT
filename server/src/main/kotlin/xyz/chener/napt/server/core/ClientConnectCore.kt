@@ -13,7 +13,6 @@ import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.DisposableBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner

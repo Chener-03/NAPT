@@ -17,10 +17,10 @@ spring:
 
 napt:
   server:
-    port: 5900
+    port: 4990
     traffic-limiter: true
   http:
     auth: true
     token: "1234567890"
 server:
-  port: 5901
+  port: 4991

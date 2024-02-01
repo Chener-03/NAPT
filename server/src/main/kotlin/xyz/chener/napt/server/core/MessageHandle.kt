@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import xyz.chener.napt.common.entity.DataFrameCode
 import xyz.chener.napt.common.entity.DataFrameEntity
+import xyz.chener.napt.common.entity.ProxyType
 import xyz.chener.napt.server.core.proxy.TcpPortProxy
 import xyz.chener.napt.server.core.proxy.UdpPortProxy
-import xyz.chener.napt.common.entity.ProxyType
 import xyz.chener.napt.server.repository.ClientItemRepository
 
 

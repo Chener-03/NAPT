@@ -144,6 +144,11 @@ class UdpRequestClient(val clientAddress:String,val  clientHost:String, val clie
                     }
                 }
             }
+
+
+            override fun exceptionCaught(ctx: ChannelHandlerContext?, cause: Throwable?) {
+                log.error("UDP:远程 address [{}:{}] 与 [{}] 连接异常", remoteHost,remotePort, clientAddress, cause)
+            }
         }
     }
 

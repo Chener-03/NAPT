@@ -17,7 +17,7 @@ class AotRuntime : RuntimeHintsRegistrar {
 
 
     val resourcePath: List<String> = mutableListOf(
-
+        "logback.xml"
     )
 
     val refClass: List<Class<*>> = Arrays.asList<Class<*>>(

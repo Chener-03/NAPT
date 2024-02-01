@@ -4,11 +4,8 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import xyz.chener.napt.common.entity.DataFrameCode
 import xyz.chener.napt.common.entity.DataFrameEntity
-
 
 
 open class ClientMessageDispatch(val clientManager: ClientManager,val messageHandle: MessageHandle) : ChannelInboundHandlerAdapter() {
