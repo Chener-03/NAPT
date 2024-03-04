@@ -88,10 +88,11 @@ class TcpRequestClient(val clientAddress:String,val  clientHost:String, val clie
     }
 
     fun writeAndFlushWithQueue(data: ByteArray) {
-        sendDataQueue.put(data)
+        sendDataQueue.offer(data)
     }
 
     fun close() {
+        sendDataQueue.clear()
         getServerConnectCore().tcpRemoteRequestMap.remove(remoteChannelId)
         channel?.close()
         thread?.interrupt()
