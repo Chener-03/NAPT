@@ -16,6 +16,7 @@ java {
     sourceCompatibility = '21'
 }
 
+
 dependencies {
     implementation project(":common")
 
@@ -26,6 +27,11 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+
+    // bugfix:
+    // https://github.com/spring-projects/spring-framework/issues/32311
+    // 此版本升级到 Hibernate 6.4.4.Final。虽然它包含许多有价值的错误修复，但它在本机映像中无法正常工作。如果您使用的是 GraalVM，则应使用该 hibernate.version 属性暂时将 Hibernate 降级到 6.4.2.Final。
+    implementation 'org.hibernate.orm:hibernate-core:6.4.2.Final'
 
 
     implementation 'io.netty:netty-all:4.1.106.Final'
