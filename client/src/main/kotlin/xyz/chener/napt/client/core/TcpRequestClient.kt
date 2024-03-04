@@ -70,6 +70,8 @@ class TcpRequestClient(val clientAddress:String,val  clientHost:String, val clie
 
     }
 
+
+    // 队列发送数据
     private fun sendDataAsync(){
         while (!Thread.currentThread().isInterrupted && sendDataThread != null){
             try {
