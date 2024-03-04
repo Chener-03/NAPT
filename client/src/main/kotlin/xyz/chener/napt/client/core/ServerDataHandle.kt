@@ -61,9 +61,8 @@ class ServerDataHandle(
                         val uri = URI.create(addrWithoutProtocol)
                         client = TcpRequestClient(msg.clientAddress,uri.host,uri.port,msg.tcpRemoteChannelId,msg.data.toByteArray())
                         tcpRemoteRequestMap[msg.tcpRemoteChannelId] = client
-                    }else {
-                        client.writeAndFlush(msg.data.toByteArray())
                     }
+                    client.writeAndFlushWithQueue(msg.data.toByteArray())
                 }
 
                 DataFrameCode.REMOTE_CHANNEL_CLOSE_TCP.code ->{
@@ -86,9 +85,8 @@ class ServerDataHandle(
                         val uri = URI.create(addrWithoutProtocol)
                         client = UdpRequestClient(msg.clientAddress,uri.host,uri.port,msg.udpRemoteIp,msg.udpRemotePort,msg.data.toByteArray())
                         udpRemoteRequestList.add(client!!)
-                    }else {
-                        client!!.writeAndFlush(msg.data.toByteArray())
                     }
+                    client!!.writeAndFlush(msg.data.toByteArray())
 
                 }
 

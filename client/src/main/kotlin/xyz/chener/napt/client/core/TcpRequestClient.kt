@@ -13,15 +13,20 @@ import xyz.chener.napt.client.ApplicationContextHolder
 import xyz.chener.napt.common.entity.DataFrameCode
 import xyz.chener.napt.common.entity.DataFrameEntity
 import xyz.chener.napt.common.entity.ProxyType
+import java.util.concurrent.LinkedBlockingQueue
 
 
 class TcpRequestClient(val clientAddress:String,val  clientHost:String, val clientPort:Int, val remoteChannelId:String, val initData:ByteArray) {
 
     private val log: Logger = LoggerFactory.getLogger(TcpRequestClient::class.java)
 
-    private val thread: Thread? = null
+    private var thread: Thread? = null
 
     private var channel: Channel? = null
+
+    private var sendDataQueue: LinkedBlockingQueue<ByteArray> = LinkedBlockingQueue<ByteArray>(100)
+
+    private var sendDataThread: Thread? = null
 
     @Volatile
     private var serverConnectCore: ServerConnectCore? = null
@@ -38,7 +43,8 @@ class TcpRequestClient(val clientAddress:String,val  clientHost:String, val clie
     }
 
     init {
-        Thread.ofVirtual().name("TcpReq:${clientAddress}").start(this::run)
+        sendDataThread = Thread.ofVirtual().name("TRS:${clientAddress}").start(this::sendDataAsync)
+        thread = Thread.ofVirtual().name("TcpReq:${clientAddress}").start(this::run)
     }
 
     private fun run() {
@@ -64,15 +70,32 @@ class TcpRequestClient(val clientAddress:String,val  clientHost:String, val clie
 
     }
 
+    private fun sendDataAsync(){
+        while (!Thread.currentThread().isInterrupted && sendDataThread != null){
+            try {
+                if (channel == null) {
+                    Thread.sleep(100)
+                    continue
+                }
+                val data = sendDataQueue.take()
+                channel?.writeAndFlush(data)
+            } catch (e: InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+        }
+    }
 
-    fun writeAndFlush(data: ByteArray) {
-        channel?.writeAndFlush(data)
+    fun writeAndFlushWithQueue(data: ByteArray) {
+        sendDataQueue.put(data)
     }
 
     fun close() {
         getServerConnectCore().tcpRemoteRequestMap.remove(remoteChannelId)
         channel?.close()
         thread?.interrupt()
+        sendDataThread?.interrupt()
+        thread = null
+        sendDataThread = null
     }
 
     private fun notifyRemoteChannelClose(){

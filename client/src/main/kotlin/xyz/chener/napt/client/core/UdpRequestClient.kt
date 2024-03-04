@@ -21,9 +21,9 @@ class UdpRequestClient(val clientAddress:String,val  clientHost:String, val clie
 
     private val log: Logger = LoggerFactory.getLogger(UdpRequestClient::class.java)
 
-    private val thread: Thread? = null
+    private var thread: Thread? = null
 
-    private val cleanThread: Thread? = null
+    private var cleanThread: Thread? = null
 
     private var lastActiveTime = 0L
 
@@ -51,8 +51,8 @@ class UdpRequestClient(val clientAddress:String,val  clientHost:String, val clie
     init {
         isStart = true
         lastActiveTime = System.currentTimeMillis()
-        Thread.ofVirtual().name("UdpReq:${clientAddress}").start(this::run)
-        Thread.ofVirtual().name("UdpClr:${clientAddress}").start(this::clear)
+        thread = Thread.ofVirtual().name("UdpReq:${clientAddress}").start(this::run)
+        cleanThread = Thread.ofVirtual().name("UdpClr:${clientAddress}").start(this::clear)
     }
 
     private fun run(){
