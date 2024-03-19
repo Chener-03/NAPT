@@ -1,7 +1,7 @@
 napt:
   client:
     server-port: 4990
-    server-address: "127.0.0.1"
+    server-address: "39.106.135.32"
     client-uid: "5FC36BA2FA0F4F1398DEDE7EBEE44BB9"
     force-access: true
 spring:
