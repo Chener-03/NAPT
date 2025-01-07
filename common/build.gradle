@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.22'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.0'
 }
 
 group = 'xyz.chener.napt.common'
@@ -12,8 +12,8 @@ java {
 }
 
 dependencies {
-    implementation 'com.google.protobuf:protobuf-java:3.25.2'
-    implementation 'io.netty:netty-all:4.1.106.Final'
+    implementation 'com.google.protobuf:protobuf-java:4.29.2'
+    implementation 'io.netty:netty-all:4.1.116.Final'
 }
 
 tasks.withType(KotlinCompile) {
