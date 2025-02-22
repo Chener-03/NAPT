@@ -131,6 +131,7 @@ open class ServerConnectCore : CommandLineRunner, ApplicationListener<ContextClo
                 if (channel != null && channel!!.isActive){
                     val data: DataFrameEntity.DataFrame =
                         DataFrameEntity.DataFrame.newBuilder().setCode(DataFrameCode.HEART_BEAT.code).build()
+                    log.info("HeartBeat ... ping")
                     channel!!.writeAndFlush(data)
                 }
             }catch (e: Exception){

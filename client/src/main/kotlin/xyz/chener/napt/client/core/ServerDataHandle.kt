@@ -113,6 +113,10 @@ class ServerDataHandle(
                     ctx.channel().close()
                 }
 
+                DataFrameCode.HEART_BEAT.code ->{
+                    log.info("HeartBeat ... pong")
+                }
+
             }
         }
     }
