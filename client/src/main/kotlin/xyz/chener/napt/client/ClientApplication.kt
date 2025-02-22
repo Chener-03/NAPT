@@ -3,12 +3,12 @@ package xyz.chener.napt.client
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ImportRuntimeHints
+import xyz.chener.napt.client.aot.AotRuntime
 import xyz.chener.napt.common.utils.BuildInfoUtils
-import java.io.ByteArrayInputStream
-import java.util.Properties
-import java.util.concurrent.ConcurrentHashMap
 
 @SpringBootApplication
+@ImportRuntimeHints(AotRuntime::class)
 class ClientApplication
 
 fun main(args: Array<String>) {
