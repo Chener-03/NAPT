@@ -1,10 +1,11 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.9.25'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
-    id 'org.springframework.boot' version '3.4.3'
+    id 'org.jetbrains.kotlin.jvm' version '2.3.20-RC2'
+    id 'org.jetbrains.kotlin.plugin.spring' version '2.3.20-RC2'
+    id 'org.springframework.boot' version '4.0.3'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.graalvm.buildtools.native' version '0.10.5'
+    id 'org.graalvm.buildtools.native' version '0.11.5'
 }
 
 group = 'xyz.chener.napt.client'
@@ -12,15 +13,11 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll '-Xjsr305=strict'
-    }
-}
+
 
 dependencies {
     implementation project(":common")
@@ -28,10 +25,18 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'io.netty:netty-all:4.1.106.Final'
-    implementation 'com.google.protobuf:protobuf-java:3.25.2'
+    implementation 'io.netty:netty-all:4.2.10.Final'
+    implementation 'com.google.protobuf:protobuf-java:4.34.0'
 }
 
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_25)
+        freeCompilerArgs.addAll '-Xjsr305=strict', '-Xannotation-default-target=param-property'
+    }
+    jvmToolchain(25)
+}
 
 
 tasks.named('test') {
@@ -40,4 +45,9 @@ tasks.named('test') {
 
 springBoot {
     buildInfo()
+}
+
+configurations.configureEach {
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

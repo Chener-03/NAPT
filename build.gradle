@@ -1,7 +1,14 @@
 allprojects{
 
-    repositories {
-        maven { name "Alibaba" ; url "https://maven.aliyun.com/repository/public" }
-        mavenCentral()
-    }
+//    repositories {
+//        maven {
+//            url "https://dl.cloudsmith.io/public/dowgo/mvnrepo/maven/"
+//        }
+//
+//
+//        maven { url "https://maven.aliyun.com/repository/public" }
+//        maven { url 'https://jitpack.io' }
+//        mavenCentral()
+//        google()
+//    }
 }
