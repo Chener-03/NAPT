@@ -1,4 +1,4 @@
-FROM debian:12-slim
+FROM docker.1ms.run/debian:12-slim
 
 ENV TZ=Asia/Shanghai
 
