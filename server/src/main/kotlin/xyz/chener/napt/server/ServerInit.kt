@@ -18,7 +18,7 @@ open class ServerInit : CommandLineRunner {
     lateinit var token: String
 
 
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         println("token: $token")
 //        println(ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(clientItemRepository?.findAll()))
     }

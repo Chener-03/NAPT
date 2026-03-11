@@ -80,7 +80,7 @@ open class ClientConnectCore : CommandLineRunner,ApplicationListener<ContextClos
         channel?.closeFuture()?.sync()
     }
 
-    override fun run(vararg args: String?) {
+    override fun run(vararg args: String) {
         start()
     }
 

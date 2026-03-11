@@ -42,36 +42,39 @@ class AotRuntime : RuntimeHintsRegistrar {
 
     override fun registerHints(hints: RuntimeHints, classLoader: ClassLoader?) {
 
-        refClass.forEach(Consumer<Class<*>> { e: Class<*>? ->
+        refClass.forEach(Consumer<Class<*>> { e: Class<*> ->
             hints.reflection().registerType(
-                e!!, MemberCategory.DECLARED_CLASSES,
-                MemberCategory.DECLARED_FIELDS,
-                MemberCategory.INVOKE_DECLARED_METHODS,
+                e,
+                MemberCategory.ACCESS_PUBLIC_FIELDS,
+                MemberCategory.ACCESS_DECLARED_FIELDS,
+                MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS,
                 MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,
-                MemberCategory.INVOKE_PUBLIC_METHODS
+                MemberCategory.INVOKE_PUBLIC_METHODS,
+                MemberCategory.INVOKE_DECLARED_METHODS
             )
         })
 
-        refClassStr.forEach(Consumer<String> { e: String? ->
+        refClassStr.forEach(Consumer { e: String ->
             hints.reflection().registerType(
                 TypeReference.of(
-                    e!!
-                ), MemberCategory.DECLARED_CLASSES,
-                MemberCategory.DECLARED_FIELDS,
-                MemberCategory.INVOKE_DECLARED_METHODS,
+                    e
+                ),                 MemberCategory.ACCESS_PUBLIC_FIELDS,
+                MemberCategory.ACCESS_DECLARED_FIELDS,
+                MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS,
                 MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,
-                MemberCategory.INVOKE_PUBLIC_METHODS
+                MemberCategory.INVOKE_PUBLIC_METHODS,
+                MemberCategory.INVOKE_DECLARED_METHODS
             )
         })
 
 
-        proxyClass.forEach(Consumer<Class<*>> { e: Class<*>? ->
+        proxyClass.forEach(Consumer<Class<*>> { e: Class<*> ->
             hints.proxies().registerJdkProxy(e)
         })
 
-        resourcePath.forEach(Consumer<String> { e: String? ->
+        resourcePath.forEach(Consumer<String> { e: String ->
             hints.resources().registerPattern(
-                e!!
+                e
             )
         })
 
