@@ -32,6 +32,9 @@ class AotRuntime : RuntimeHintsRegistrar {
         io.netty.channel.PreferHeapByteBufAllocator::class.java,
         io.netty.buffer.PooledByteBufAllocator::class.java,
         io.netty.buffer.AbstractByteBufAllocator::class.java,
+
+        ClientItemRepository::class.java,
+        org.springframework.data.jpa.repository.JpaSpecificationExecutor.SpecificationFluentQuery::class.java,
     )
 
     val refClassStr: List<String> = mutableListOf(

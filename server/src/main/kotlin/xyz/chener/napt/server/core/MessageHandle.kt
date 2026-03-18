@@ -1,6 +1,8 @@
 package xyz.chener.napt.server.core
 
 import io.netty.channel.ChannelHandlerContext
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import xyz.chener.napt.common.entity.DataFrameCode
@@ -13,6 +15,8 @@ import xyz.chener.napt.server.repository.ClientItemRepository
 
 @Component
 open class MessageHandle {
+
+    private val log : Logger = LoggerFactory.getLogger(MessageHandle::class.java)
 
     @Autowired
     lateinit var clientItemRepository: ClientItemRepository
@@ -59,6 +63,7 @@ open class MessageHandle {
 
             clientManager.authClient(ctx, data.clientUid, clientItems)
         }.onFailure {
+            log.error("error: ",it)
             ctx.channel().writeAndFlush(
                 DataFrameEntity.DataFrame.newBuilder()
                     .setCode(DataFrameCode.ACCESS_FAIL.code)
